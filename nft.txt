@@ -1,0 +1,112 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Counters.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/math/SafeMath.sol";
+
+
+contract NFT is ERC721, Ownable {
+    using Counters for Counters.Counter;
+    Counters.Counter private tokenIds;
+    using SafeMath for uint256;
+    
+    mapping (uint256 => uint256)  id_lotto; // identificativo fornitura 
+    mapping (uint256 => uint256)  CO2; 
+    mapping (uint256 => uint256)  old_nft_id; // indirizzo nft fornitore
+    mapping (uint256 => address)  public fornitori; // lista fornitori
+    mapping (uint256 => address)  public trasformatori; // lista trasformatori
+    uint public num_fornitori = 0;     //per sapere quanti ne sono
+    uint public num_trasformatori = 0; //idem
+
+    constructor() ERC721("CarbonFootprint", "CFP") { 
+    }
+
+    //funzione generica sia per aggiungere trasformatori (true) che per fornitori (false)
+    //_nuovo_account è l'indirizzo dell'account da aggiungere
+    function aggiungi_agenti(bool _tipo, address _nuovo_account) public onlyOwner returns(string memory) {
+        //Controllo che l'account non sia già registrato
+        require(!controllo_account(_nuovo_account, true) && !controllo_account(_nuovo_account, false), "L'account esiste gia");
+
+        //Controllo che l'account non sia nullo (indirizzo non valido)
+        require(_nuovo_account != address(0), "Non si puo inserire un account nullo");
+
+        //Lasciamo libero trasformatori[0] e fornitori[0] per l'id vuoto
+        if (_tipo) {
+            num_trasformatori++;
+            trasformatori[num_trasformatori] = _nuovo_account;
+        }
+        else {
+            num_fornitori++;
+            fornitori[num_fornitori] = _nuovo_account;
+        }
+        return "L'account ha i permessi";
+    } 
+
+    function createItem(address tokenOwner, uint256 _id_lotto, uint256 _CO2, uint256 _old_nft_id) private returns (uint256) {
+        tokenIds.increment();
+        uint256 newItemId = tokenIds.current();
+        id_lotto[newItemId] = _id_lotto;
+        CO2[newItemId] = _CO2;
+        old_nft_id[newItemId] = _old_nft_id;
+        _mint(tokenOwner, newItemId);
+        return newItemId;
+    }
+
+    //crea l'nft del fornitore
+    function fornitore(uint256 _id_lotto, uint256  _CO2) public {
+        require(controllo_account(msg.sender, false), "Non sei un fornitore");
+        createItem(msg.sender, _id_lotto, _CO2, 0);
+    }
+    
+    //crea l'nft del trasformatore
+    function trasformatore(uint256 _old_nft_id, uint256  _dati_grezzi) public { 
+        require(controllo_account(msg.sender, true), "Non sei un trasformatore");
+        //_dati_grezzi = 2**(256)-1; //attivare riga per fare la prova del buffer overflow 
+
+        //Il trasformatore può usare solo gli nft nel suo portafoglio
+        require(ERC721.ownerOf(_old_nft_id) == msg.sender, "Non sei il proprietario dell'NFT"); 
+
+        (bool ctrl, uint256 totale) = SafeMath.tryAdd(CO2[_old_nft_id],_dati_grezzi);
+        require(ctrl, "Buffer overflow nel calcolo C02 totale"); 
+        //se scatta l'exception la variabile totale viene fatta tornare a 0 (valore di inizializzazione di default)
+        createItem(msg.sender, id_lotto[_old_nft_id], totale, _old_nft_id);
+    }
+
+    //restituisce 1 se l'account è presente in lista, 0 se non lo è
+    //prende come parametri l'indirizzo dell'account da controllare e un bool con true se devo cercare tra i trasformatori, false se tra i fornitori
+    function controllo_account(address _account, bool _tipo) private view returns (bool) {
+        if (_tipo == false) {
+            for (uint i = 1; i <= num_fornitori; i++) {
+                if (_account == fornitori[i]) {
+                    return true;
+                }
+            }
+        }
+        else{
+            for (uint i = 1; i <= num_trasformatori; i++) {
+                if (_account == trasformatori[i]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    // Chiamata dal cliente per conoscere l'impronta
+    function lettura_impronta(uint256 _id_nft) public view returns (uint256,uint256,uint256) {
+        require(_id_nft != 0 && _id_nft <= tokenIds.current(), "Questo token non esiste");
+        return (id_lotto[_id_nft], CO2[_id_nft], old_nft_id[_id_nft]);
+    }
+
+    function trasferimento_nft(address _to, uint256 _tokenId) public {
+        require(controllo_account(msg.sender, false), "Non sei un fornitore");
+        require(controllo_account(_to, true), "Destinatario non e un trasformatore");
+        safeTransferFrom(msg.sender, _to, _tokenId);
+    }
+}
+
+//TODO
+//Rendere interne le funzioni pubbliche ereditate da ERC721 (sennò posso passare token da trasf. a fornitore, ad esempio)
+//Risolvere warning
