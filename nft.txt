@@ -13,22 +13,25 @@ contract NFT is ERC721, Ownable {
     using SafeMath for uint256;
     
     mapping (uint256 => uint256)  id_lotto; // identificativo fornitura 
-    mapping (uint256 => uint256)  CO2; 
+    mapping (uint256 => uint256)  CO2; // occhio alla virgola
     mapping (uint256 => uint256)  old_nft_id; // indirizzo nft fornitore
-    mapping (uint256 => address)  public fornitori; // lista fornitori
-    mapping (uint256 => address)  public trasformatori; // lista trasformatori
-    uint public num_fornitori = 0;     //per sapere quanti ne sono
-    uint public num_trasformatori = 0; //idem
+    mapping (uint256 => address)  fornitori; // lista fornitori
+    mapping (uint256 => address)  trasformatori; // lista trasformatori
+    uint num_fornitori = 0;     //per sapere quanti ne sono, non ho trovato un modo migliore per farlo
+    uint num_trasformatori = 0; //idem
 
+    //(mo non fa rosso, ma non so se va be a non mette public)
     constructor() ERC721("CarbonFootprint", "CFP") { 
     }
 
     //funzione generica sia per aggiungere trasformatori (true) che per fornitori (false)
     //_nuovo_account è l'indirizzo dell'account da aggiungere
     function aggiungi_agenti(bool _tipo, address _nuovo_account) public onlyOwner returns(string memory) {
+        //require(msg.sender == capo_supremo, "L'account non ha i permessi"); //solo il capo supremo può farlo
         //Controllo che l'account non sia già registrato
         require(!controllo_account(_nuovo_account, true) && !controllo_account(_nuovo_account, false), "L'account esiste gia");
 
+        //EDIT
         //Controllo che l'account non sia nullo (indirizzo non valido)
         require(_nuovo_account != address(0), "Non si puo inserire un account nullo");
 
@@ -65,6 +68,7 @@ contract NFT is ERC721, Ownable {
         require(controllo_account(msg.sender, true), "Non sei un trasformatore");
         //_dati_grezzi = 2**(256)-1; //attivare riga per fare la prova del buffer overflow 
 
+        //EDIT
         //Il trasformatore può usare solo gli nft nel suo portafoglio
         require(ERC721.ownerOf(_old_nft_id) == msg.sender, "Non sei il proprietario dell'NFT"); 
 
@@ -100,13 +104,25 @@ contract NFT is ERC721, Ownable {
         return (id_lotto[_id_nft], CO2[_id_nft], old_nft_id[_id_nft]);
     }
 
+    //true = trasformatori, false = fornitori
+    function lista(bool _tipo, uint _indice) public view returns(address) {
+        if (_tipo){
+            return trasformatori[_indice];
+        }
+        else{
+            return fornitori[_indice];
+        }
+    }
+
+    //EDIT
     function trasferimento_nft(address _to, uint256 _tokenId) public {
         require(controllo_account(msg.sender, false), "Non sei un fornitore");
-        require(controllo_account(_to, true), "Destinatario non e un trasformatore");
         safeTransferFrom(msg.sender, _to, _tokenId);
     }
 }
 
 //TODO
+//Accettare token in arrivo ----------------------------------------------- Non si deve fare
+//Il trasformatore può usare solo gli nft nel suo portafoglio ------------- Fatto
+//Fare funzione di trasferimento o usare safe transfer -------------------- Fatto
 //Rendere interne le funzioni pubbliche ereditate da ERC721 (sennò posso passare token da trasf. a fornitore, ad esempio)
-//Risolvere warning
