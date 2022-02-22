@@ -71,6 +71,7 @@ contract NFT is ERC721, Ownable {
 
         //Sommo i contributi
         uint256 totale = token[_old_nft_id].CO2 + temp_CO2[_id_lotto];
+        temp_CO2[_id_lotto]=0;
 
         createItem(msg.sender, token[_old_nft_id].id_lotto, totale, _old_nft_id);
     }
@@ -102,8 +103,10 @@ contract NFT is ERC721, Ownable {
     }
 
     function trasferimento_nft(address _to, uint256 _tokenId) public {
-        require(controllo_account(msg.sender, false), "Non sei un fornitore");
+        require(ERC721.ownerOf(_tokenId) == msg.sender, "Non sei il proprietario dell'NFT");
         require(controllo_account(_to, true), "Destinatario non e un trasformatore");
+
+        require(controllo_lotto(msg.sender,token[_tokenId].id_lotto) == _tokenId, "Puoi trasferire solo l'ultimo NFT creato di questo lotto");
         safeTransferFrom(msg.sender, _to, _tokenId);
     }
 
@@ -113,19 +116,24 @@ contract NFT is ERC721, Ownable {
     function aggiungi_azione(string memory _nome_azione , uint256 _id_lotto, uint _CO2 ) public returns (bool) {
         require(controllo_account(msg.sender, true), "Non sei un trasformatore");
         //EDIT
-        for (uint256 id; id <= tokenIds; id++){
+        require(controllo_lotto(msg.sender,_id_lotto) !=0, "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni");
+        temp_CO2[_id_lotto] += _CO2;
+        emit azione_trasformatore(_nome_azione, _id_lotto, _CO2);
+        return true;
+    }
+
+    function controllo_lotto (address _sender, uint256 _id_lotto) private view returns (uint256) {
+        for (uint256 id = tokenIds; id >= 1; id--){
            if (token[id].id_lotto == _id_lotto){
-               if (msg.sender == ownerOf(id)){
-                    temp_CO2[_id_lotto] += _CO2;
-                    emit azione_trasformatore(_nome_azione, _id_lotto, _CO2);
-                    return true;
+               if (_sender == ownerOf(id)){
+                    return id;
                 } 
                 else {
-                return false;
+                return 0;
                 }
             }
         }
-        return false;
+        return 0;
     }
 
 }
