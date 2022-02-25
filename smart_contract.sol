@@ -175,52 +175,6 @@ contract NFT is ERC721, Ownable {
     }
 
 }
-/**    function aggiungi_azione(string memory _nome_azione , uint256 _id_lotto, uint _CO2 ) public returns (bool) {
-            require(controllo_account(msg.sender, true), "Non sei un trasformatore");
-            //EDIT
-            bool esito;
-            address account_owner;
-            (uint256 _id_nft, ) = ricerca_lotto(_id_lotto);
-            if (_id_nft != 0){
-                account_owner = ownerOf(_id_nft);
-            }
-            else {
-                account_owner = address(0);
-            }
-            if (msg.sender == account_owner){
-                temp_CO2[_id_lotto] += _CO2;
-                emit azione_trasformatore(_nome_azione, _id_lotto, _CO2);
-                esito = true;
-            }
-            else {
-                esito = false;
-            }
-            return esito; //true se il lotto c'è, false se non c'è
-        }
-
-
-    
-    //EDIT
-    function ricerca_lotto(uint256 _id_lotto) public view returns (uint256, uint256) {
-        uint256 id_nft_fornitore = 0;
-        uint256 id_nft_trasformatore = 0;
-
-        for (uint256 id; id <= tokenIds; id++){
-            if (token[id].id_lotto == _id_lotto){
-                if (token[id].old_nft_id == 0){
-                    id_nft_fornitore = id;
-                }
-                else {
-                    id_nft_trasformatore = id;
-                }
-            }
-        }
-        return (id_nft_fornitore, id_nft_trasformatore); 
-    }
-
-}
-
-*/
 
 //TODO
 //Rendere interne le funzioni pubbliche ereditate da ERC721 (sennò posso passare token da trasf. a fornitore, ad esempio)
