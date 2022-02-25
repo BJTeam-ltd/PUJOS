@@ -218,11 +218,9 @@ contract NFT is ERC721, Ownable {
         return (id_nft_fornitore, id_nft_trasformatore); 
     }
 
-
 }
 
 */
-
 
 //TODO
 //Rendere interne le funzioni pubbliche ereditate da ERC721 (sennò posso passare token da trasf. a fornitore, ad esempio)
@@ -230,4 +228,3 @@ contract NFT is ERC721, Ownable {
 
 //sulla relazione mettere cosa fare degli nft usati
 //sulla relazione dire che solisity 0.8.0 controlla overflow e underflow
-
