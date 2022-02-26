@@ -128,14 +128,14 @@ contract NFT is ERC721, Ownable {
         return false;   // Se arrivo fin quì l'account non è presente in lista
     }
 
-    // Funzione chiamata dal cliente per conoscere l'impronta, restituisce i dati relativi
+    // Chiamata dal cliente per conoscere l'impronta, restituisce i dati relativi
     function lettura_impronta_da_id_nft(uint256 _id_nft) public view returns (uint256, uint256, uint256) {
         require(_id_nft != 0 && _id_nft <= tokenIds, "Questo token non esiste");
         
         return (token[_id_nft].id_lotto, token[_id_nft].CO2, token[_id_nft].old_nft_id);
     }
 
-    // Funzione per trasferire nft, solo trasformatori e clienti possono riceverlo
+    // Trasferimento nft, solo trasformatori e clienti possono riceverlo
     function trasferimento_nft(address _to, uint256 _nftId) public {
         require(ERC721.ownerOf(_nftId) == msg.sender, "Non sei il proprietario dell'NFT");
         require(controllo_account(_to, 2) || controllo_account(_to, 3), "Il destinatario e' un fornitore, non puo' ricevere nft");
@@ -152,34 +152,35 @@ contract NFT is ERC721, Ownable {
     function aggiungi_azione(string memory _nome_azione , uint256 _id_lotto, uint _CO2 ) public returns (bool) {
         require(controllo_account(msg.sender, 2), "Non sei un trasformatore");
         //EDIT
-        require(controllo_lotto(msg.sender,_id_lotto) !=0, "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni");
+        require(controllo_lotto(msg.sender,_id_lotto) != 0, "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni");
         temp_CO2[_id_lotto] += _CO2;
         emit azione_trasformatore(_nome_azione, _id_lotto, _CO2);
         return true;
     }
 
-    function controllo_lotto (address _sender, uint256 _id_lotto) private view returns (uint256) {
-        for (uint256 id = tokenIds; id >= 1; id--){
+    // Restituisce l'id se il lotto esiste e l'ultimo nft associato è di _sender, 0 altrimenti
+    function controllo_lotto(address _sender, uint256 _id_lotto) private view returns (uint256) {
+        for (uint256 id = tokenIds; id >= 1; id--){ // Procede dall'ultimo creato verso il primo
            if (token[id].id_lotto == _id_lotto){
                if (_sender == ownerOf(id)){
-                    return id;
+                    return id;  // Il lotto esiste e l'ultimo nft associato è di _sender
                 } 
                 else {
-                return 0;
+                return 0;   // Il lotto esiste ma l'ultimo nft associato non è di _sender
                 }
             }
         }
-        return 0;
+        return 0;   // Il lotto non esiste
     }
 
-    //Ritorna l'ultimo nft associato ad un certo id_lotto
+    // Ritorna l'ultimo nft associato ad un certo id_lotto
     function ricerca_lotto(uint256 _id_lotto) public view returns (uint256) {
-        for (uint256 id = tokenIds; id >= 1; id--){
+        for (uint256 id = tokenIds; id >= 1; id--){ // Procede dall'ultimo creato verso il primo
             if (token[id].id_lotto == _id_lotto){
-                    return id;
+                return id;  // L'nft associato al lotto esiste
             } 
         }
-        return 0;
+        return 0;   // non esiste
     }
 
 }
@@ -189,4 +190,4 @@ contract NFT is ERC721, Ownable {
 //Risolvere warning
 
 //sulla relazione mettere cosa fare degli nft usati
-//sulla relazione dire che solisity 0.8.0 controlla overflow e underflow
+//sulla relazione dire che solidity 0.8.0 controlla overflow e underflow
