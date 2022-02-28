@@ -1,13 +1,34 @@
-tipo_utente = {
-    0 : "Capo supremo",
-    1 : "Fornitore",
-    2 : "Trasformatore",
-    3 : "Cliente"
-}
+from menu import *
+
+def admin_home():
+    print("Buongiorno capo")
+
+def fornitore_home():
+    print("Buongiorno sig. fornitore")
+
+def trasformatore_home():
+    print("Buongiorno sig. trasformatore")
+
+def cliente_home():
+    print("Buongiorno sig. cliente")
+
 print("Benvenuto nella Dapp")
-utente = 4;
-while (utente < 0 or utente > 3):
-    utente = int(input("Inserisci: \n 0 - Capo supremo \n 1 - Fornitore\n 2 - Trasformatore\n 3 - Cliente\n"))
-    if (utente < 0 or utente > 3):
+
+while(True):
+    scelta_utente() # Stampa il menù per la scelta utente
+    utente = input() #TODO controllare lunghezza massima
+
+    if(utente == "0"):
+        admin_home()
+    elif(utente == "1"):
+        fornitore_home()
+    elif(utente == "2"):
+        trasformatore_home()
+    elif(utente == "3"):
+        cliente_home()
+    elif(utente == "h"):
+        helper()
+    elif(utente == "q"):
+        exit()
+    else:
         print("Inserisci un numero valido")
-print("Benvenuto " + tipo_utente.get(utente))
