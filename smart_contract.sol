@@ -24,6 +24,8 @@ contract NFT is ERC721, Ownable {
     uint public num_trasformatori = 0;                  // idem
     uint public num_clienti = 0;                        // idem con patate
 
+    event azione_trasformatore(string _nome_azione, uint256 _id_lotto, uint _CO2); // Evento per emissione azione
+
     constructor() ERC721("CarbonFootprint", "CFP") { 
     }
     
@@ -60,15 +62,12 @@ contract NFT is ERC721, Ownable {
     // Creazione nuovo nft, restituisce il nuovo id
     function createItem(address tokenOwner, uint256 _id_lotto, uint256 _CO2, uint256 _old_nft_id) private returns (uint256) {
         tokenIds++; //non serve controllo overflow https://docs.soliditylang.org/en/v0.8.11/control-structures.html#checked-or-unchecked-arithmetic
-        uint256 newItemId = tokenIds;
         
-        token[newItemId].id_lotto = _id_lotto;      // Assegnazione contenuti al nuovo nft
-        token[newItemId].CO2 = _CO2;
-        token[newItemId].old_nft_id = _old_nft_id;
+        token[tokenIds].id_lotto = _id_lotto;      // Assegnazione contenuti al nuovo nft
+        token[tokenIds].CO2 = _CO2;
+        token[tokenIds].old_nft_id = _old_nft_id;
         
-        _mint(tokenOwner, newItemId);               // Creazione nft
-        
-        return newItemId;
+        _mint(tokenOwner, tokenIds);               // Creazione nft
     }
 
     // Creazione nft del fornitore
@@ -146,9 +145,7 @@ contract NFT is ERC721, Ownable {
         safeTransferFrom(msg.sender, _to, _nftId);
     }
 
-    // Evento per emissione azione 
-    event azione_trasformatore(string _nome_azione, uint256 _id_lotto, uint _CO2);
-
+    // Aggiunta CO2 al conteggio totale della CO2 del lotto ed emit azione
     function aggiungi_azione(string memory _nome_azione , uint256 _id_lotto, uint _CO2 ) public returns (bool) {
         require(controllo_account(msg.sender, 2), "Non sei un trasformatore");
         //EDIT
