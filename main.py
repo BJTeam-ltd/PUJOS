@@ -1,7 +1,25 @@
 from menu import *
+from blockchain import blockchain
+
+bch = blockchain()
 
 def admin_home():
-    print("Buongiorno capo")
+    print("Benvenuto Amministratore")
+    while (True):
+        menu_admin()
+        s_admin = input()
+        if s_admin in {"1","2","3"}:
+            print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)), "oppure q per uscire")
+            address = input()
+            if(address=="q"):
+                pass
+            else:
+                bch.saluta()
+
+        elif (s_admin == "q"):
+            break
+        else:
+            print("Inserisci un numero valido")
 
 def fornitore_home():
     print("Buongiorno sig. fornitore")
@@ -29,6 +47,6 @@ while(True):
     elif(utente == "h"):
         helper()
     elif(utente == "q"):
-        exit()
+        exit("Arrivederci!!")
     else:
         print("Inserisci un numero valido")
