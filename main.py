@@ -35,7 +35,7 @@ def cliente_home():
 if __name__ == "__main__":
 
     #Stampe inziali, Benvenuto e controllo connessione blockchain
-    print("Benvenuto nella Dapp")
+    print(bcolors.HEADER + "Benvenuto nella Dapp" + bcolors.ENDC)
 
     if bch.connessione():
         print("Sei connesso alla blockchain")
