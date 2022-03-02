@@ -3,18 +3,20 @@ from blockchain import blockchain
 
 bch = blockchain()
 
+# Funzione operazioni admin
 def admin_home():
     print("Benvenuto Amministratore")
     while (True):
         menu_admin()
         s_admin = input()
+        # Inserisce un nuovo agente
         if s_admin in {"1","2","3"}:
             print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)), "oppure q per uscire")
             address = input()
             if(address=="q"):
                 pass
             else:
-                bch.saluta()
+                bch.aggiunta_agenti()
 
         elif (s_admin == "q"):
             break
@@ -30,23 +32,32 @@ def trasformatore_home():
 def cliente_home():
     print("Buongiorno sig. cliente")
 
-print("Benvenuto nella Dapp")
+if __name__ == "__main__":
 
-while(True):
-    scelta_utente() # Stampa il menù per la scelta utente
-    utente = input() #TODO controllare lunghezza massima
+    #Stampe inziali, Benvenuto e controllo connessione blockchain
+    print("Benvenuto nella Dapp")
 
-    if(utente == "0"):
-        admin_home()
-    elif(utente == "1"):
-        fornitore_home()
-    elif(utente == "2"):
-        trasformatore_home()
-    elif(utente == "3"):
-        cliente_home()
-    elif(utente == "h"):
-        helper()
-    elif(utente == "q"):
-        exit("Arrivederci!!")
+    if bch.connessione():
+        print("Sei connesso alla blockchain")
     else:
-        print("Inserisci un numero valido")
+        print("Connessione fallita")
+        exit(1)
+
+    while(True):
+        scelta_utente() # Stampa il menù per la scelta utente
+        utente = input() #TODO controllare lunghezza massima
+
+        if(utente == "0"):
+            admin_home()
+        elif(utente == "1"):
+            fornitore_home()
+        elif(utente == "2"):
+            trasformatore_home()
+        elif(utente == "3"):
+            cliente_home()
+        elif(utente == "h"):
+            helper()
+        elif(utente == "q"):
+            exit("Arrivederci!!")
+        else:
+            print("Inserisci un numero valido")
