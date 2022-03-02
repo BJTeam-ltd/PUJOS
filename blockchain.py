@@ -1,3 +1,4 @@
+from hexbytes import HexBytes
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
 from menu import tipo_utente, bcolors
@@ -6,7 +7,7 @@ from address import *
 class blockchain:
 
     def __init__(self):
-        self.w3 = Web3(Web3.HTTPProvider('http://127.0.0.1:22000'))  # indirizzo nodo1
+        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:22000'))  # indirizzo nodo1
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         with open('abi', 'r') as file:
@@ -20,17 +21,11 @@ class blockchain:
     def aggiunta_agenti(self, tipo, address):
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
         try:
-            if self.c_instance.functions.aggiungi_agenti(tipo, address).transact()==address:
+            tx_hash= self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
+            tt = self.w3.eth.waitForTransactionReceipt(tx_hash)
+            if tt == address:
                 print(bcolors.WARNING + "Errore nell'aggiunta account "+ str(tipo_utente.get(tipo)) + bcolors.ENDC)
             else:
                 print("Errore nell'aggiunta account", tipo_utente.get(tipo))
-        except:
-            print(bcolors.FAIL + "Errore interno blockchain!!" + bcolors.ENDC)
-
-
-
-
-
-
-
-
+        except Exception as problema:
+            print(bcolors.FAIL + str(problema) + bcolors.ENDC)
