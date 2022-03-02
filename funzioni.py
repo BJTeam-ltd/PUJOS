@@ -1,7 +1,7 @@
 
 # Validazione input: controlla la lunghezza e restituisce la stringa validata
 # Continua a chiedere l'input per 5 volte
-def input_val(max_len = 43):
+def input_val(max_len = 43, max_retry = 5):
     c = 1
     validated = False   # Input non ancora validato
 
@@ -9,7 +9,7 @@ def input_val(max_len = 43):
         in_str = input()
         if len(in_str) < max_len:   # Controllo massima lunghezza
             validated = True
-        elif c > 5:
+        elif c > max_retry:
             exit(5)
         else:
             print('Invalid input')
