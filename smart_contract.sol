@@ -31,7 +31,7 @@ contract NFT is ERC721, Ownable {
     
     // Funzione generica sia per aggiungere fornitori (1), trasformatori (2), clienti (3)
     // _nuovo_account è l'indirizzo dell'account da aggiungere
-    function aggiungi_agenti(uint8 _tipo, address _nuovo_account) public onlyOwner returns(string memory) {
+    function aggiungi_agenti(uint8 _tipo, address _nuovo_account) public onlyOwner returns (address) {
         
         //Controllo che l'account non sia già registrato
         require(!controllo_account(_nuovo_account, 1) && !controllo_account(_nuovo_account, 2) && !controllo_account(_nuovo_account, 3), "L'account esiste gia");
@@ -56,11 +56,11 @@ contract NFT is ERC721, Ownable {
             clienti[num_clienti] = _nuovo_account;
         }
 
-        return "Nuovo account creato";
+        return _nuovo_account;
     } 
 
     // Creazione nuovo nft, restituisce il nuovo id
-    function createItem(address tokenOwner, uint256 _id_lotto, uint256 _CO2, uint256 _old_nft_id) private returns (uint256) {
+    function createItem(address tokenOwner, uint256 _id_lotto, uint256 _CO2, uint256 _old_nft_id) private {
         tokenIds++; //non serve controllo overflow https://docs.soliditylang.org/en/v0.8.11/control-structures.html#checked-or-unchecked-arithmetic
         
         token[tokenIds].id_lotto = _id_lotto;      // Assegnazione contenuti al nuovo nft
