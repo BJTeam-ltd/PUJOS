@@ -16,7 +16,7 @@ def admin_home():
             if(address=="q"):
                 pass
             else:
-                bch.aggiunta_agenti()
+                bch.aggiunta_agenti(int(s_admin),address)
 
         elif (s_admin == "q"):
             break
@@ -41,7 +41,7 @@ if __name__ == "__main__":
         print("Sei connesso alla blockchain")
     else:
         print("Connessione fallita")
-        exit(1)
+        #exit(10)
 
     while(True):
         scelta_utente() # Stampa il menù per la scelta utente
