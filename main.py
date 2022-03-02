@@ -1,5 +1,6 @@
 from menu import *
 from blockchain import blockchain
+from funzioni import input_val
 
 bch = blockchain()
 
@@ -12,7 +13,7 @@ def admin_home():
         # Inserisce un nuovo agente
         if s_admin in {"1","2","3"}:
             print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)), "oppure q per uscire")
-            address = input()
+            address = input_val()
             if(address=="q"):
                 pass
             else:
