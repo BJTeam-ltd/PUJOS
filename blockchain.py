@@ -1,6 +1,6 @@
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
-from menu import tipo_utente
+from menu import tipo_utente, bcolors
 from address import *
 
 class blockchain:
@@ -19,11 +19,13 @@ class blockchain:
 
     def aggiunta_agenti(self, tipo, address):
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
-        if self.c_instance.functions.aggiungi_agenti(tipo, address).transact()==address:
-            print("Hai aggiunto con successo l'account", address, "come", tipo_utente.get(tipo))
-        else:
-            print("Errore nell'aggiunta account", tipo_utente.get(tipo))
-
+        try:
+            if self.c_instance.functions.aggiungi_agenti(tipo, address).transact()==address:
+                print(bcolors.WARNING + "Errore nell'aggiunta account "+ str(tipo_utente.get(tipo)) + bcolors.ENDC)
+            else:
+                print("Errore nell'aggiunta account", tipo_utente.get(tipo))
+        except:
+            print(bcolors.FAIL + "Errore interno blockchain!!" + bcolors.ENDC)
 
 
 
