@@ -16,3 +16,4 @@ def input_val(max_len = 43, max_retry = 5):
             c += 1
 
     return in_str
+
