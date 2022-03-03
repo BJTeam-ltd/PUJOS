@@ -13,6 +13,7 @@ def admin_home():
         # Inserisce un nuovo agente
         if s_admin in {"1","2","3"}:
             print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)), "oppure q per uscire")
+            #TODO suggerimento indirizzo utente
             address = input_val()
             if(address=="q"):
                 pass
