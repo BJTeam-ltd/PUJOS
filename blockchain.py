@@ -26,3 +26,26 @@ class blockchain:
             print(bcolors.OKGREEN + "Aggiunta account "+ str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
+
+    def ricerca_agenti(self,tipo):
+        agenti = []
+        i = 1
+        if tipo==1:
+            tmp = self.c_instance.functions.fornitori(i).call()
+            while "0x0000000000000000000000000000000000000000" != tmp:
+                agenti.append(tmp)
+                i = i+1
+                tmp = self.c_instance.functions.fornitori(i).call()
+        elif tipo==2:
+            tmp = self.c_instance.functions.trasformatori(i).call()
+            while "0x0000000000000000000000000000000000000000" != tmp:
+                agenti.append(tmp)
+                i = i+1
+                tmp = self.c_instance.functions.trasformatori(i).call()
+        else:
+            tmp = self.c_instance.functions.clienti(i).call()
+            while "0x0000000000000000000000000000000000000000" != tmp:
+                agenti.append(tmp)
+                i = i+1
+                tmp = self.c_instance.functions.clienti(i).call()
+        return agenti
