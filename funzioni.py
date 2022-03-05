@@ -20,7 +20,7 @@ def input_val(max_len = 43, max_retry = 5):
     return in_str
 
 
-def suggerimento_address_utente():
+def genera_portafoglio():
     priv = secrets.token_hex(32)
     private_key = "0x" + priv
     acct = Account.from_key(private_key)

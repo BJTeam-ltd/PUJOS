@@ -22,10 +22,7 @@ class blockchain:
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
         try:
             tx_hash= self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
-            tt = self.w3.eth.waitForTransactionReceipt(tx_hash)
-            if tt == address:
-                print(bcolors.WARNING + "Errore nell'aggiunta account "+ str(tipo_utente.get(tipo)) + bcolors.ENDC)
-            else:
-                print("Errore nell'aggiunta account", tipo_utente.get(tipo))
+            tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
+            print(bcolors.OKGREEN + "Aggiunta account "+ str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
