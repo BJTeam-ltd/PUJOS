@@ -27,7 +27,7 @@ class blockchain:
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
 
-    def ricerca_agenti(self,tipo):
+    def ricerca_agenti(self,tipo):  #funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
         agenti = []
         i = 1
         if tipo==1:
