@@ -9,20 +9,21 @@ def input_val(max_len = 43, max_retry = 5):
 
     while not validated:
         in_str = input()
-        if len(in_str) <= max_len:   # Controllo massima lunghezza
-            validated = True
-        elif c > max_retry:
+        if not in_str.isalnum():        # Controllo caratteri speciali
+            print('Caratteri non ammessi')
+            c += 1
+        elif len(in_str) > max_len:     # Controllo massima lunghezza
+            print('Input troppo lungo')
+            c += 1
+        elif c > max_retry:     # tentativi terminati
             exit(5)
         else:
-            print('Invalid input')
-            c += 1
+            validated = True
 
     return in_str
-
 
 def genera_portafoglio():
     priv = secrets.token_hex(32)
     private_key = "0x" + priv
     acct = Account.from_key(private_key)
     return private_key, acct.address
-
