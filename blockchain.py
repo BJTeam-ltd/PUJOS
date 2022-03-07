@@ -18,7 +18,7 @@ class blockchain:
     def connessione(self): #funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 
-    def aggiunta_agenti(self, tipo, address):
+    def aggiunta_agenti(self, tipo, address):   # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
         try:
             tx_hash= self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
@@ -27,7 +27,7 @@ class blockchain:
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
 
-    def ricerca_agenti(self,tipo):  #funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
+    def ricerca_agenti(self,tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
         agenti = []
         i = 1
         if tipo==1:

@@ -9,10 +9,10 @@ bch = blockchain()
 def admin_home():
     print("Benvenuto Amministratore")
     while (True):
-        menu_admin()
-        s_admin = input()
+        menu_admin()        # mostra il menu dell'amministratore
+        s_admin = input_val(max_len = 1)
         # Inserisce un nuovo agente
-        if s_admin in {"1", "2", "3"}:
+        if s_admin in {"1", "2", "3"}:  # tipologie di account ammessi
             print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)) + ",",
                   bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo, " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per uscire")
             address = input_val()
@@ -22,9 +22,9 @@ def admin_home():
             if (address == "q"):
                 pass
             else:
-                bch.aggiunta_agenti(int(s_admin), address)
+                bch.aggiunta_agenti(int(s_admin), address)      # aggiunta account alla blockchain
 
-        elif (s_admin == "b"):
+        elif (s_admin == "b"):      # stampa l'elenco degli account creati
             print("Elenco Fornitori:")
             print(bch.ricerca_agenti(1))
             print("Elenco Trasformatori:")
@@ -63,7 +63,7 @@ if __name__ == "__main__":
 
     while (True):
         scelta_utente()  # Stampa il menù per la scelta utente
-        utente = input()  # TODO controllare lunghezza massima
+        utente = input_val(max_len = 1)
 
         if (utente == "0"):
             admin_home()
