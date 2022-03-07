@@ -51,7 +51,11 @@ class blockchain:
         return agenti
 
     def login_account(self, tipo, address):
-        self.w3.eth.defaultAccount = Web3.toChecksumAddress(address)
+        #TODO AUTENTICAZIONE CON PASSWORD E CHIAVE PRIVATA (O SALVATA O DA USARE SUBITO)
+        #personal.unlockAccount(address, "password")
+        #self.w3.eth.defaultAccount = Web3.toChecksumAddress(address)
+        pass
 
     def crea_nft_fornitore(self,id_lotto,CO2):
-        self.c_instance.functions.nft_fornitore(id_lotto,CO2)
+        self.c_instance.functions.nft_fornitore(id_lotto,CO2).transact({'from': "0xaA001A9768ceEBa1cc51FcC52888Be800924fBAf"})
+        #TODO PASSARE ADDRESS E SOSTITUIRE INDIRIZZO ACCOUNT CON GENERICO

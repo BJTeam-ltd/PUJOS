@@ -27,3 +27,5 @@ def genera_portafoglio():
     private_key = "0x" + priv
     acct = Account.from_key(private_key)
     return private_key, acct.address
+    #TODO PRIMA DI RITORNARE DEVE INSERIRE ACCOUNT SU BLOCKCHAIN
+    #web3.personal.importRawKey("<Private Key>","<New Password>")

@@ -41,7 +41,7 @@ def admin_home():
 def accoglienza(tipo):
     print("Elenco indirizzi esistenti")
     print(bch.ricerca_agenti(tipo))
-    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + "q" + bcolors.ENDC + " per uscire")
+    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
     address = input_val()
     if (address == "q"):
         return False
@@ -52,17 +52,17 @@ def accoglienza(tipo):
 
 def fornitore_home():
     print("Buongiorno sig. fornitore")
-    while(True):
-        if not accoglienza(1):
-            break
-        else:
+    if not accoglienza(1):
+        pass
+    else:
+        while(True):
             menu_fornitore()
             s_fornitore = input_val(max_len = 1)
-            if s_fornitore == 1:
+            if s_fornitore == "1":
                 print("Inserisci il lotto relativo al prodotto")
-                id_lotto = input_val(max_len = 20)
+                id_lotto = int(input_val(max_len = 20))
                 print("Inserisci il totale di CO2 emessa in grammi")
-                CO2 = input_val(max_len = 10)
+                CO2 = int(input_val(max_len = 10))
                 bch.crea_nft_fornitore(id_lotto,CO2)
 
 

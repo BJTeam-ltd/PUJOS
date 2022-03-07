@@ -39,7 +39,7 @@ Admin:
  \033[93m 2\033[0m - Aggiungi Trasformatore
  \033[93m 3\033[0m - Aggiungi Cliente
  \033[96m b\033[0m - Elenco indirizzi
- \033[96m q\033[0m - Log Out
+ \033[96m q\033[0m - Logout
 ************************''')
 
 
@@ -49,5 +49,5 @@ Fornitore:
  \033[93m 1\033[0m - Crea il tuo NFT
  \033[93m 2\033[0m - I tuoi NFT
  \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
- \033[96m q\033[0m - Log Out
+ \033[96m q\033[0m - Logout
 ************************''')
