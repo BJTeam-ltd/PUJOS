@@ -49,3 +49,9 @@ class blockchain:
                 i = i+1
                 tmp = self.c_instance.functions.clienti(i).call()
         return agenti
+
+    def login_account(self, tipo, address):
+        self.w3.eth.defaultAccount = Web3.toChecksumAddress(address)
+
+    def crea_nft_fornitore(self,id_lotto,CO2):
+        self.c_instance.functions.nft_fornitore(id_lotto,CO2)

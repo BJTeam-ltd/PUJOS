@@ -38,8 +38,34 @@ def admin_home():
             print("Inserisci un numero valido")
 
 
+def accoglienza(tipo):
+    print("Elenco indirizzi esistenti")
+    print(bch.ricerca_agenti(tipo))
+    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + "q" + bcolors.ENDC + " per uscire")
+    address = input_val()
+    if (address == "q"):
+        return False
+    else:
+        bch.login_account(tipo, address) #TODO DEVE RITORNARE QUALCOSA
+        return True
+
+
 def fornitore_home():
     print("Buongiorno sig. fornitore")
+    while(True):
+        if not accoglienza(1):
+            break
+        else:
+            menu_fornitore()
+            s_fornitore = input_val(max_len = 1)
+            if s_fornitore == 1:
+                print("Inserisci il lotto relativo al prodotto")
+                id_lotto = input_val(max_len = 20)
+                print("Inserisci il totale di CO2 emessa in grammi")
+                CO2 = input_val(max_len = 10)
+                bch.crea_nft_fornitore(id_lotto,CO2)
+
+
 
 
 def trasformatore_home():
