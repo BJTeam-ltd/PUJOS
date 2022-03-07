@@ -9,7 +9,7 @@ def input_val(max_len = 43, max_retry = 5):
 
     while not validated:
         in_str = input()
-        if len(in_str) < max_len:   # Controllo massima lunghezza
+        if len(in_str) <= max_len:   # Controllo massima lunghezza
             validated = True
         elif c > max_retry:
             exit(5)
