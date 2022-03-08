@@ -7,7 +7,7 @@ from address import *
 class blockchain:
 
     def __init__(self):
-        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:22000'))  # indirizzo nodo1
+        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:110'))  # indirizzo nodo1
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         with open('abi', 'r') as file:
