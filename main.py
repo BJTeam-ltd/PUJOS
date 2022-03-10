@@ -16,8 +16,10 @@ def admin_home():
             print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)) + ",",
                   bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo, " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per uscire")
             address = input_val()
+            #TODO richiedere chiave privata per bch.inserimento_account(private_key,"password_sicura")
             if (address == "c"):
                 private_key, address = genera_portafoglio()  # funzione che genera un indirizzo del portafoglio
+                bch.inserimento_account(private_key,"passwordsicura")
                 print("Indirizzo generato:\n", address, "\n", private_key)
             if (address == "q"):
                 pass

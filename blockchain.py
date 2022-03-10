@@ -18,6 +18,9 @@ class blockchain:
     def connessione(self): #funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 
+    def inserimento_account(self,priv_key, password):
+        self.w3.parity.personal.importRawKey(priv_key,password)
+
     def aggiunta_agenti(self, tipo, address):   # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
         try:
