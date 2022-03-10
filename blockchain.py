@@ -7,7 +7,7 @@ from address import *
 class blockchain:
 
     def __init__(self):
-        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:22000'))  # indirizzo nodo1
+        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:110'))  # indirizzo nodo1
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         with open('abi', 'r') as file:
@@ -17,6 +17,9 @@ class blockchain:
 
     def connessione(self): #funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
+
+    def inserimento_account(self,priv_key, password):
+        self.w3.parity.personal.importRawKey(priv_key,password)
 
     def aggiunta_agenti(self, tipo, address):   # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
@@ -49,3 +52,13 @@ class blockchain:
                 i = i+1
                 tmp = self.c_instance.functions.clienti(i).call()
         return agenti
+
+    def login_account(self, tipo, address):
+        #TODO AUTENTICAZIONE CON PASSWORD E CHIAVE PRIVATA (O SALVATA O DA USARE SUBITO)
+        #personal.unlockAccount(address, "password")
+        #self.w3.eth.defaultAccount = Web3.toChecksumAddress(address)
+        pass
+
+    def crea_nft_fornitore(self,id_lotto,CO2):
+        self.c_instance.functions.nft_fornitore(id_lotto,CO2).transact({'from': "0xaA001A9768ceEBa1cc51FcC52888Be800924fBAf"})
+        #TODO PASSARE ADDRESS E SOSTITUIRE INDIRIZZO ACCOUNT CON GENERICO

@@ -16,8 +16,10 @@ def admin_home():
             print("Inserisci indirizzo portafoglio", tipo_utente.get(int(s_admin)) + ",",
                   bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo, " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per uscire")
             address = input_val()
+            #TODO richiedere chiave privata per bch.inserimento_account(private_key,"password_sicura")
             if (address == "c"):
                 private_key, address = genera_portafoglio()  # funzione che genera un indirizzo del portafoglio
+                bch.inserimento_account(private_key,"passwordsicura")
                 print("Indirizzo generato:\n", address, "\n", private_key)
             if (address == "q"):
                 pass
@@ -38,8 +40,34 @@ def admin_home():
             print("Inserisci un numero valido")
 
 
+def accoglienza(tipo):
+    print("Elenco indirizzi esistenti")
+    print(bch.ricerca_agenti(tipo))
+    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
+    address = input_val()
+    if (address == "q"):
+        return False
+    else:
+        bch.login_account(tipo, address) #TODO DEVE RITORNARE QUALCOSA
+        return True
+
+
 def fornitore_home():
     print("Buongiorno sig. fornitore")
+    if not accoglienza(1):
+        pass
+    else:
+        while(True):
+            menu_fornitore()
+            s_fornitore = input_val(max_len = 1)
+            if s_fornitore == "1":
+                print("Inserisci il lotto relativo al prodotto")
+                id_lotto = int(input_val(max_len = 20))
+                print("Inserisci il totale di CO2 emessa in grammi")
+                CO2 = int(input_val(max_len = 10))
+                bch.crea_nft_fornitore(id_lotto,CO2)
+
+
 
 
 def trasformatore_home():
