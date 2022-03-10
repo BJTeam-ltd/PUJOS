@@ -4,6 +4,7 @@ from web3.middleware import geth_poa_middleware
 from menu import tipo_utente, bcolors
 from address import *
 
+
 class blockchain:
 
     def __init__(self):
@@ -13,52 +14,66 @@ class blockchain:
         with open('abi', 'r') as file:
             abi = file.read()
 
-        self.c_instance = self.w3.eth.contract(address= Web3.toChecksumAddress(contract_address), abi=abi)
+        self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)
 
-    def connessione(self): #funzione che ritorna true se correttamente connessi all'account
+    def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 
-    def inserimento_account(self,priv_key, password):
-        self.w3.parity.personal.importRawKey(priv_key,password)
-
-    def aggiunta_agenti(self, tipo, address):   # funzione che inserisce "address" alla blockchain
-        self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address) # indirizzo account admin
+    def account_bloccato(self, account):  # funzione che verifica se l'account necessita di essere sbloccato
         try:
-            tx_hash= self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
+            self.w3.eth.sendTransaction({'from': account, 'to': account, 'value': 0})
+            return False
+        except:
+            return True
+
+    def inserimento_account(self, priv_key, password):
+        try:
+            self.w3.parity.personal.importRawKey(priv_key, password)  # inserisce l'account nella lista del nodo della blockchain con una nuova password
+            return True  # ritorna vero se l'inserimento è riuscito
+        except:
+            return False
+
+    def aggiunta_agenti(self, tipo, address):  # funzione che inserisce "address" alla blockchain
+        self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
+        try:
+            tx_hash = self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
             tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
-            print(bcolors.OKGREEN + "Aggiunta account "+ str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
+            print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
 
-    def ricerca_agenti(self,tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
+    def ricerca_agenti(self,
+                       tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
         agenti = []
         i = 1
-        if tipo==1:
+        if tipo == 1:
             tmp = self.c_instance.functions.fornitori(i).call()
             while "0x0000000000000000000000000000000000000000" != tmp:
                 agenti.append(tmp)
-                i = i+1
+                i = i + 1
                 tmp = self.c_instance.functions.fornitori(i).call()
-        elif tipo==2:
+        elif tipo == 2:
             tmp = self.c_instance.functions.trasformatori(i).call()
             while "0x0000000000000000000000000000000000000000" != tmp:
                 agenti.append(tmp)
-                i = i+1
+                i = i + 1
                 tmp = self.c_instance.functions.trasformatori(i).call()
         else:
             tmp = self.c_instance.functions.clienti(i).call()
             while "0x0000000000000000000000000000000000000000" != tmp:
                 agenti.append(tmp)
-                i = i+1
+                i = i + 1
                 tmp = self.c_instance.functions.clienti(i).call()
         return agenti
 
-    def login_account(self, tipo, address):
-        #TODO AUTENTICAZIONE CON PASSWORD E CHIAVE PRIVATA (O SALVATA O DA USARE SUBITO)
-        #personal.unlockAccount(address, "password")
-        #self.w3.eth.defaultAccount = Web3.toChecksumAddress(address)
-        pass
+    def login_account(self, tipo, address,password):
+        try:
+            self.w3.parity.personal.unlockAccount(address, password)
+            return True
+        except:
+            return False
 
-    def crea_nft_fornitore(self,id_lotto,CO2):
-        self.c_instance.functions.nft_fornitore(id_lotto,CO2).transact({'from': "0xaA001A9768ceEBa1cc51FcC52888Be800924fBAf"})
-        #TODO PASSARE ADDRESS E SOSTITUIRE INDIRIZZO ACCOUNT CON GENERICO
+    def crea_nft_fornitore(self, id_lotto, CO2):
+        self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact(
+            {'from': "0xaA001A9768ceEBa1cc51FcC52888Be800924fBAf"})
+        # TODO PASSARE ADDRESS E SOSTITUIRE INDIRIZZO ACCOUNT CON GENERICO

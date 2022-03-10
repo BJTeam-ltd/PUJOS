@@ -19,8 +19,11 @@ def admin_home():
             #TODO richiedere chiave privata per bch.inserimento_account(private_key,"password_sicura")
             if (address == "c"):
                 private_key, address = genera_portafoglio()  # funzione che genera un indirizzo del portafoglio
-                bch.inserimento_account(private_key,"passwordsicura")
-                print("Indirizzo generato:\n", address, "\n", private_key)
+                if bch.inserimento_account(private_key,"passwordsicura"): #TODO scegliere se far inserire la password o lasciare sempre la stessa
+                    print("Indirizzo generato:\n","Address:" ,address, "\n","Private Key:", private_key)
+                else:
+                    print("Errore nella creazione dell'Account")
+
             if (address == "q"):
                 pass
             else:
@@ -48,7 +51,12 @@ def accoglienza(tipo):
     if (address == "q"):
         return False
     else:
-        bch.login_account(tipo, address) #TODO DEVE RITORNARE QUALCOSA
+        if bch.account_bloccato(address):
+            print("sblocco account")
+            return True
+            bch.login_account(tipo, address,"passwordsicura") #TODO DEVE RITORNARE QUALCOSA
+        else:
+            print("account gia sbloccato")
         return True
 
 
@@ -66,7 +74,8 @@ def fornitore_home():
                 print("Inserisci il totale di CO2 emessa in grammi")
                 CO2 = int(input_val(max_len = 10))
                 bch.crea_nft_fornitore(id_lotto,CO2)
-
+            if (s_fornitore == "q"):
+                break
 
 
 
