@@ -21,7 +21,7 @@ class blockchain:
 
     def account_bloccato(self, account):  # funzione che verifica se l'account necessita di essere sbloccato
         try:
-            self.w3.eth.sendTransaction({'from': account, 'to': account, 'value': 0})
+            self.w3.eth.sendTransaction({'from': account, 'to': account, 'value': 0}) #TODO con questa riga si paga gas
             return False
         except:
             return True
@@ -42,8 +42,7 @@ class blockchain:
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
 
-    def ricerca_agenti(self,
-                       tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
+    def ricerca_agenti(self, tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
         agenti = []
         i = 1
         if tipo == 1:
@@ -73,7 +72,6 @@ class blockchain:
         except:
             return False
 
-    def crea_nft_fornitore(self, id_lotto, CO2):
-        self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact(
-            {'from': "0xaA001A9768ceEBa1cc51FcC52888Be800924fBAf"})
-        # TODO PASSARE ADDRESS E SOSTITUIRE INDIRIZZO ACCOUNT CON GENERICO
+    def crea_nft_fornitore(self, address, id_lotto, CO2):
+        self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': address})
+        #TODO ritornare qualcosa alla funzione precedente

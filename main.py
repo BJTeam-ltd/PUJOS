@@ -52,17 +52,18 @@ def accoglienza(tipo):
         return False
     else:
         if bch.account_bloccato(address):
-            print("sblocco account")
-            return True
             bch.login_account(tipo, address,"passwordsicura") #TODO DEVE RITORNARE QUALCOSA
+            print("sblocco account")
+            return address
         else:
             print("account gia sbloccato")
-        return True
+        return address
 
 
 def fornitore_home():
     print("Buongiorno sig. fornitore")
-    if not accoglienza(1):
+    address = accoglienza(1)
+    if not address:
         pass
     else:
         while(True):
@@ -73,7 +74,7 @@ def fornitore_home():
                 id_lotto = int(input_val(max_len = 20))
                 print("Inserisci il totale di CO2 emessa in grammi")
                 CO2 = int(input_val(max_len = 10))
-                bch.crea_nft_fornitore(id_lotto,CO2)
+                bch.crea_nft_fornitore(address, id_lotto, CO2)
             if (s_fornitore == "q"):
                 break
 
