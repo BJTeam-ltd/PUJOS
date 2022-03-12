@@ -37,7 +37,7 @@ def admin_home():
                 if bch.inserimento_account(private_key, password):
                     print("Indirizzo inserito nel nodo corrente")
                 else:
-                    print("Errore nell'inserimento dell'Account")
+                    print(bcolors.FAIL + "Errore nell'inserimento dell'Account" + bcolors.ENDC)
 
             else:
                 pass
@@ -64,16 +64,16 @@ def login(tipo):
     if (address == "q"):    # logout
         return False
     else:
-        if bch.account_bloccato(address):
+        if not bch.account_sbloccato(address):
             password = richiedi_password()    # inserimento password account
             logged = bch.sblocco_account(tipo, address, password)
             if (logged):
-                print("account sbloccato")
+                print(bcolors.OKCYAN + "account sbloccato" + bcolors.ENDC)
             else:
-                print("errore nello sblocco dell'account")
+                print(bcolors.FAIL + "errore nello sblocco dell'account" + bcolors.ENDC)
                 return False    # sblocco account non andato a buon fine, logout
         else:
-            print("account gia sbloccato")
+            print(bcolors.OKCYAN + "account già sbloccato" + bcolors.ENDC)
         return address  # se l'account era già sbloccato o è stato sbloccato
 
 
@@ -90,7 +90,8 @@ def fornitore_home():
                 CO2 = int(input_val(messaggio = "Inserisci il totale di CO2 emessa in grammi", max_len = 10))
                 bch.crea_nft_fornitore(address, id_lotto, CO2)
             if (s_fornitore == "q"):
-                bch.blocco_account(address)
+                if (bch.blocco_account(address)):
+                    print("logout eseguito")
                 break
             # TODO GESTISCI ALTRE AZIONI FORNITORE
 

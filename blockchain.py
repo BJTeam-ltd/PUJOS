@@ -21,18 +21,19 @@ class blockchain:
         return self.w3.isConnected()
 
 
-    def account_bloccato(self, account):  # funzione che verifica se l'account necessita di essere sbloccato
-        try:
-            self.w3.eth.sendTransaction({'from': account, 'to': account, 'value': 0}) #TODO con questa riga si paga gas
-            return False
-        except:
-            return True
+    def account_sbloccato(self, account):  # funzione che verifica se l'account è già sbloccato
+        lst = self.w3.geth.personal.list_wallets()  # funzione che ritorna la lista dei portafogli gestiti da geth
+        for i in range(len(lst)):
+            if lst[i].accounts[0].address == account:
+                if lst[i].status == "Unlocked":
+                    return True     # se l'account passato è già sbloccato ritorno true
+        return False
 
 
     def inserimento_account(self, priv_key, password):
         try:
-            # TODO Deprecated: This method is deprecated in favor of import_raw_key()
-            self.w3.parity.personal.importRawKey(priv_key, password)  # inserisce l'account nella lista del nodo della blockchain con una nuova password
+            # inserisce l'account nella lista del nodo della blockchain con una nuova password
+            self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
             return True  # ritorna vero se l'inserimento è riuscito
         except:
             return False
@@ -74,11 +75,7 @@ class blockchain:
 
     def sblocco_account(self, tipo, address, password):
         try:
-            # TODO Deprecated: This method is deprecated in favor of unlock_account()
-            #  valutare se meglio parity o geth
-            #  parametro "tipo" non usato, va rimosso?
-            #self.w3.parity.personal.unlock_account(account = address, passphrase = password, duration = 1200) # duration in secondi
-            #self.w3.parity.personal.unlockAccount(address, password)
+            # TODO parametro "tipo" non usato, va rimosso?
             self.w3.geth.personal.unlock_account(account = address, passphrase = password, duration = 1200)
             return True
         except Exception as problema:
