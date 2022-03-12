@@ -1,3 +1,4 @@
+from funzioni import input_val
 
 class bcolors:
     HEADER = '\033[95m'
@@ -17,6 +18,7 @@ tipo_utente={
     3 : "Cliente"
 }
 
+
 def scelta_utente():
     print('''------------------------
 Chi sei?:
@@ -27,6 +29,8 @@ Chi sei?:
  \033[96m h\033[0m - Help
  \033[96m q\033[0m - Esci
 ------------------------''')
+    return input_val(max_len=1)
+
 
 def helper():
     print("Apri il manuale")
@@ -41,6 +45,7 @@ Admin:
  \033[96m b\033[0m - Elenco indirizzi
  \033[96m q\033[0m - Logout
 ************************''')
+    return input_val(max_len=1)
 
 
 def menu_fornitore():
@@ -51,4 +56,4 @@ Fornitore:
  \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
  \033[96m q\033[0m - Logout
 ************************''')
-    #TODO FUNZIONE RELATIVA A 2 E 3
+    return input_val(max_len=1)
