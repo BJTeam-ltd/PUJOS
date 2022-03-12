@@ -1,26 +1,31 @@
 from eth_account import Account
 import secrets
 
-# Validazione input: controlla la lunghezza e restituisce la stringa validata
-# Continua a chiedere l'input per 5 volte
-def input_val(max_len = 43, max_retry = 5):
-    c = 1
+# Validazione input
+# Controlla la lunghezza e restituisce la stringa validata
+# Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
+def input_val(max_len = 66, max_retry = 5, messaggio = ""):
+    print("",  end = messaggio) # stampa un eventuale messaggio passato come parametro
     validated = False   # Input non ancora validato
 
     while not validated:
-        in_str = input()
-        if not in_str.isalnum():        # Controllo caratteri speciali
-            print('Caratteri non ammessi')
-            c += 1
-        elif len(in_str) > max_len:     # Controllo massima lunghezza
-            print('Input troppo lungo')
-            c += 1
-        elif c > max_retry:     # tentativi terminati
+        if max_retry <= 0:  # tentativi terminati
             exit(5)
-        else:
+
+        in_str = input()    # lettura input e conteggio tentativo
+        max_retry -= 1
+
+        if not in_str:      # ammetti input vuoto
+            validated = True
+        elif not in_str.isalnum():        # Controllo caratteri speciali
+            print('Caratteri non ammessi')
+        elif len(in_str) > max_len:  # Controllo massima lunghezza
+            print('Input troppo lungo')
+        else:   # Se i controlli sono passati, l'input è validato
             validated = True
 
     return in_str
+
 
 def genera_portafoglio():
     priv = secrets.token_hex(32)
