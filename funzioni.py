@@ -28,7 +28,7 @@ def input_val(max_len = 66, max_retry = 5, messaggio = ""):
 
 
 def richiedi_password():        # Chiede di scegliere una password, se non inserita, la sceglie in automatico
-    passw = input_val(messaggio="Scegli una password o premi 'invio' per default password", max_len=32)
+    passw = input_val(messaggio="Scegli una password o premi 'invio' per default password: ", max_len=32)
     if not passw:  # default password
         passw = "passwordsicura"
     return passw

@@ -16,8 +16,10 @@ class blockchain:
 
         self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)
 
+
     def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
+
 
     def account_bloccato(self, account):  # funzione che verifica se l'account necessita di essere sbloccato
         try:
@@ -26,12 +28,15 @@ class blockchain:
         except:
             return True
 
+
     def inserimento_account(self, priv_key, password):
         try:
+            # TODO Deprecated: This method is deprecated in favor of import_raw_key()
             self.w3.parity.personal.importRawKey(priv_key, password)  # inserisce l'account nella lista del nodo della blockchain con una nuova password
             return True  # ritorna vero se l'inserimento è riuscito
         except:
             return False
+
 
     def aggiunta_agenti(self, tipo, address):  # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
@@ -41,6 +46,7 @@ class blockchain:
             print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
             print(bcolors.FAIL + str(problema) + bcolors.ENDC)
+
 
     def ricerca_agenti(self, tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
         agenti = []
@@ -65,11 +71,26 @@ class blockchain:
                 tmp = self.c_instance.functions.clienti(i).call()
         return agenti
 
-    def login_account(self, tipo, address,password):
+
+    def sblocco_account(self, tipo, address, password):
         try:
-            self.w3.parity.personal.unlockAccount(address, password)
+            # TODO Deprecated: This method is deprecated in favor of unlock_account()
+            #  valutare se meglio parity o geth
+            #  parametro "tipo" non usato, va rimosso?
+            #self.w3.parity.personal.unlock_account(account = address, passphrase = password, duration = 1200) # duration in secondi
+            #self.w3.parity.personal.unlockAccount(address, password)
+            self.w3.geth.personal.unlock_account(account = address, passphrase = password, duration = 1200)
             return True
-        except:
+        except Exception as problema:
+            print(str(problema))
+            return False
+
+    def blocco_account(self, address):
+        try:
+            self.w3.geth.personal.lock_account(account = address)
+            return True
+        except Exception as problema:
+            print(str(problema))
             return False
 
     def crea_nft_fornitore(self, address, id_lotto, CO2):

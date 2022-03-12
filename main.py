@@ -66,7 +66,7 @@ def login(tipo):
     else:
         if bch.account_bloccato(address):
             password = richiedi_password()    # inserimento password account
-            logged = bch.unlock_account(tipo, address, password)
+            logged = bch.sblocco_account(tipo, address, password)
             if (logged):
                 print("account sbloccato")
             else:
@@ -90,7 +90,7 @@ def fornitore_home():
                 CO2 = int(input_val(messaggio = "Inserisci il totale di CO2 emessa in grammi", max_len = 10))
                 bch.crea_nft_fornitore(address, id_lotto, CO2)
             if (s_fornitore == "q"):
-                # TODO lock account
+                bch.blocco_account(address)
                 break
             # TODO GESTISCI ALTRE AZIONI FORNITORE
 
