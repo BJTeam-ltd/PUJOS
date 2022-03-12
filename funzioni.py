@@ -27,6 +27,13 @@ def input_val(max_len = 66, max_retry = 5, messaggio = ""):
     return in_str
 
 
+def richiedi_password():        # Chiede di scegliere una password, se non inserita, la sceglie in automatico
+    passw = input_val(messaggio="Scegli una password o premi 'invio' per default password", max_len=32)
+    if not passw:  # default password
+        passw = "passwordsicura"
+    return passw
+
+
 def genera_portafoglio():
     priv = secrets.token_hex(32)
     private_key = "0x" + priv
