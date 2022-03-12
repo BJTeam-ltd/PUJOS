@@ -47,7 +47,8 @@ def menu_fornitore():
     print('''************************
 Fornitore:
  \033[93m 1\033[0m - Crea il tuo NFT
- \033[93m 2\033[0m - I tuoi NFT
+ \033[93m 2\033[0m - I tuoi NFT 
  \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
  \033[96m q\033[0m - Logout
 ************************''')
+    #TODO FUNZIONE RELATIVA A 2 E 3

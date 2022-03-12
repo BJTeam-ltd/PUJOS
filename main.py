@@ -6,7 +6,7 @@ bch = blockchain()
 
 
 # Funzione operazioni admin
-def admin_home():
+def admin_home():   #TODO SEMPLIFICA CODICE
     print("Benvenuto Amministratore")
     while (True):
         menu_admin()        # mostra il menu dell'amministratore
@@ -43,28 +43,31 @@ def admin_home():
             print("Inserisci un numero valido")
 
 
-def accoglienza(tipo):
+def login(tipo):
     print("Elenco indirizzi esistenti")
     print(bch.ricerca_agenti(tipo))
     print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
     address = input_val()
-    if (address == "q"):
+    if (address == "q"):    # logout
         return False
     else:
         if bch.account_bloccato(address):
-            bch.login_account(tipo, address,"passwordsicura") #TODO DEVE RITORNARE QUALCOSA
-            print("sblocco account")
-            return address
+            logged = bch.login_account(tipo, address,"passwordsicura")
+            if (logged):
+                print("account sbloccato")
+            else:
+                print("errore nello sblocco dell'account")
+                return False    # sblocco account non andato a buon fine, logout
         else:
             print("account gia sbloccato")
-        return address
+        return address  # se l'account era già sbloccato o è stato sbloccato
 
 
 def fornitore_home():
     print("Buongiorno sig. fornitore")
-    address = accoglienza(1)
+    address = login(1)  # funzione per sblocco account
     if not address:
-        pass
+        pass    # se è stato chiesto un logout o lo sblocco non è andato a buon fine
     else:
         while(True):
             menu_fornitore()
