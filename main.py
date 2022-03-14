@@ -38,7 +38,6 @@ def admin_home():
                     print("Indirizzo inserito nel nodo corrente")
                 else:
                     print(bcolors.FAIL + "Errore nell'inserimento dell'Account nel nodo" + bcolors.ENDC)
-
             else:
                 pass
 
@@ -77,6 +76,18 @@ def login(tipo):
         return address  # se l'account era già sbloccato o è stato sbloccato
 
 
+def accoglienza(tipo):
+    print("Elenco indirizzi esistenti")
+    print(bch.ricerca_agenti(tipo))
+    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
+    address = input_val()
+    if (address == "q"):
+        return False
+    else:
+        bch.login_account(tipo, address) #TODO DEVE RITORNARE QUALCOSA
+        return True
+
+
 def fornitore_home():
     print("Buongiorno sig. fornitore")
     address = login(1)  # funzione per sblocco account
@@ -107,7 +118,6 @@ def fornitore_home():
                     print(bcolors.OKGREEN + "Trasferimento NFT", id_nft, "verso", destinatario, "è riuscito" + bcolors.ENDC)
 
             # TODO GESTISCI ALTRE AZIONI FORNITORE
-
 
 def trasformatore_home():
     print("Buongiorno sig. trasformatore")

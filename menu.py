@@ -57,3 +57,4 @@ Fornitore:
  \033[96m q\033[0m - Logout
 ************************''')
     return input_val(max_len=1)
+

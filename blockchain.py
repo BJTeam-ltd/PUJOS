@@ -20,7 +20,6 @@ class blockchain:
     def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 
-
     def account_sbloccato(self, account):  # funzione che verifica se l'account è già sbloccato
         lst = self.w3.geth.personal.list_wallets()  # funzione che ritorna la lista dei portafogli gestiti da geth
         for i in range(len(lst)):
@@ -39,9 +38,10 @@ class blockchain:
         except:
             return False
 
-
+          
     def aggiunta_agenti(self, tipo, address):  # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
+
         try:
             tx_hash = self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
             tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
