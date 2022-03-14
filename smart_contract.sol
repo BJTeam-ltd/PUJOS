@@ -6,7 +6,7 @@ import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contr
 
 contract NFT is ERC721, Ownable {
 
-    uint256 private tokenIds;
+    uint256 public tokenIds;
     
     struct nft {            // Struttura dati associata ad ogni nft e salvati in storage
         uint256 id_lotto;   // ID lotto del prodotto associato 

@@ -37,7 +37,7 @@ def admin_home():
                 if bch.inserimento_account(private_key, password):
                     print("Indirizzo inserito nel nodo corrente")
                 else:
-                    print(bcolors.FAIL + "Errore nell'inserimento dell'Account" + bcolors.ENDC)
+                    print(bcolors.FAIL + "Errore nell'inserimento dell'Account nel nodo" + bcolors.ENDC)
 
             else:
                 pass
@@ -66,7 +66,7 @@ def login(tipo):
     else:
         if not bch.account_sbloccato(address):
             password = richiedi_password()    # inserimento password account
-            logged = bch.sblocco_account(tipo, address, password)
+            logged = bch.sblocco_account(address, password)
             if (logged):
                 print(bcolors.OKCYAN + "account sbloccato" + bcolors.ENDC)
             else:
@@ -86,13 +86,26 @@ def fornitore_home():
         while(True):
             s_fornitore = menu_fornitore()
             if s_fornitore == "1":
-                id_lotto = int(input_val(messaggio = "Inserisci il lotto relativo al prodotto", max_len = 20))
-                CO2 = int(input_val(messaggio = "Inserisci il totale di CO2 emessa in grammi", max_len = 10))
-                bch.crea_nft_fornitore(address, id_lotto, CO2)
-            if (s_fornitore == "q"):
+                id_lotto = int(input_val(messaggio = "Inserisci il lotto relativo al prodotto: ", max_len = 20))
+                CO2 = int(input_val(messaggio = "Inserisci il totale di CO2 emessa in grammi: ", max_len = 10))
+                if bch.crea_nft_fornitore(address, id_lotto, CO2):
+                    print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
+                else:
+                    print("NFT non creato")
+            if s_fornitore == "q":
                 if (bch.blocco_account(address)):
                     print("logout eseguito")
                 break
+            if s_fornitore == "2":
+                print(bch.lista_nft(address))
+            if s_fornitore == "3":
+                print("Elenco trasformatori esistenti")
+                print(bch.ricerca_agenti(2))
+                destinatario = input_val(messaggio = "Inserisci destinatario dell'NFT: ", max_len = 43)
+                id_nft = input_val(messaggio="Inserisci id NFT: ", max_len=20)
+                if bch.trasferisci_nft(destinatario, int(id_nft), address):
+                    print(bcolors.OKGREEN + "Trasferimento NFT", id_nft, "verso", destinatario, "è riuscito" + bcolors.ENDC)
+
             # TODO GESTISCI ALTRE AZIONI FORNITORE
 
 

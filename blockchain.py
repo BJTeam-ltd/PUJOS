@@ -33,7 +33,8 @@ class blockchain:
     def inserimento_account(self, priv_key, password):
         try:
             # inserisce l'account nella lista del nodo della blockchain con una nuova password
-            self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
+            # self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
+            self.w3.parity.personal.importRawKey(priv_key, password) #TODO geth non funziona, parity sì
             return True  # ritorna vero se l'inserimento è riuscito
         except:
             return False
@@ -46,7 +47,7 @@ class blockchain:
             tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
             print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
-            print(bcolors.FAIL + str(problema) + bcolors.ENDC)
+            print(bcolors.FAIL + str(problema)+ bcolors.ENDC)
 
 
     def ricerca_agenti(self, tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
@@ -73,10 +74,9 @@ class blockchain:
         return agenti
 
 
-    def sblocco_account(self, tipo, address, password):
+    def sblocco_account(self, address, password):
         try:
-            # TODO parametro "tipo" non usato, va rimosso?
-            self.w3.geth.personal.unlock_account(account = address, passphrase = password, duration = 1200)
+            self.w3.parity.personal.unlockAccount(address, password) #duration = 1200
             return True
         except Exception as problema:
             print(str(problema))
@@ -84,12 +84,35 @@ class blockchain:
 
     def blocco_account(self, address):
         try:
-            self.w3.geth.personal.lock_account(account = address)
+            #self.w3.geth.personal.lock_account(account = address)
             return True
         except Exception as problema:
             print(str(problema))
             return False
 
     def crea_nft_fornitore(self, address, id_lotto, CO2):
-        self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': address})
-        #TODO ritornare qualcosa alla funzione precedente
+        try:
+            self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': address})
+            return True
+        except:
+            return False
+
+    def lista_nft(self, address):
+        num_token = self.c_instance.functions.tokenIds().call()
+        token_posseduti = []
+        for i in range(1,num_token+1):
+            if address == self.c_instance.functions.ownerOf(i).call():
+                dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(i).call()
+                info_nft = {'id_NFT': i, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
+                token_posseduti.append(info_nft)
+        return token_posseduti
+
+    def trasferisci_nft(self, destinatario, id_nft, address):
+        try:
+            self.c_instance.functions.trasferimento_nft(destinatario, id_nft).transact({'from': address})
+            return True
+        except Exception as problema:
+            print(str(problema))
+            return False
+
+        #TODO gestione errori con variabile debug
