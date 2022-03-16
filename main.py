@@ -1,6 +1,7 @@
 from menu import *
 from blockchain import blockchain
 from funzioni import *
+from texttable import Texttable
 
 bch = blockchain()
 
@@ -38,7 +39,6 @@ def admin_home():
                     print("Indirizzo inserito nel nodo corrente")
                 else:
                     print(bcolors.FAIL + "Errore nell'inserimento dell'Account nel nodo" + bcolors.ENDC)
-
             else:
                 pass
 
@@ -77,6 +77,18 @@ def login(tipo):
         return address  # se l'account era già sbloccato o è stato sbloccato
 
 
+def accoglienza(tipo):
+    print("Elenco indirizzi esistenti")
+    print(bch.ricerca_agenti(tipo))
+    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
+    address = input_val()
+    if (address == "q"):
+        return False
+    else:
+        bch.login_account(tipo, address) #TODO DEVE RITORNARE QUALCOSA
+        return True
+
+
 def fornitore_home():
     print("Buongiorno sig. fornitore")
     address = login(1)  # funzione per sblocco account
@@ -97,7 +109,15 @@ def fornitore_home():
                     print("logout eseguito")
                 break
             if s_fornitore == "2":
-                print(bch.lista_nft(address))
+                tmp = bch.lista_nft(address)
+                list = []
+                list.append(['ID NFT', 'Lotto', 'CO\u2082', 'NFT precedente'])
+                for i in range(0, len(tmp)):
+                    list.append([tmp[i]['id_NFT'], tmp[i]['id_lotto'], tmp[i]['CO2'], tmp[i]['NFT_precedente']])
+                t = Texttable()
+                t.add_rows(list)
+                print(t.draw())
+
             if s_fornitore == "3":
                 print("Elenco trasformatori esistenti")
                 print(bch.ricerca_agenti(2))
@@ -175,7 +195,7 @@ if __name__ == "__main__":
         print("Sei connesso alla blockchain")
     else:
         print("Connessione fallita")
-        # exit(10)
+        exit(10)
 
     while (True):
         utente = scelta_utente()  # Stampa il menù per la scelta utente
