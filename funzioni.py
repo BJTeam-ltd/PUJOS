@@ -5,13 +5,13 @@ import secrets
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
 def input_val(max_len = 66, max_retry = 5, messaggio = ""):
-    print("",  end = messaggio) # stampa un eventuale messaggio passato come parametro
     validated = False   # Input non ancora validato
 
     while not validated:
         if max_retry <= 0:  # tentativi terminati
             exit(5)
 
+        print("", end=messaggio)  # stampa un eventuale messaggio passato come parametro
         in_str = input()    # lettura input e conteggio tentativo
         max_retry -= 1
 
@@ -39,3 +39,4 @@ def genera_portafoglio():
     private_key = "0x" + priv
     acct = Account.from_key(private_key)
     return private_key, acct.address
+

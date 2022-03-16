@@ -50,7 +50,7 @@ class blockchain:
             print(bcolors.FAIL + str(problema)+ bcolors.ENDC)
 
 
-    def ricerca_agenti(self, tipo):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
+    def ricerca_agenti(self, tipo, address=None):  # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
         agenti = []
         i = 1
         if tipo == 1:
@@ -62,8 +62,9 @@ class blockchain:
         elif tipo == 2:
             tmp = self.c_instance.functions.trasformatori(i).call()
             while "0x0000000000000000000000000000000000000000" != tmp:
-                agenti.append(tmp)
                 i = i + 1
+                if not tmp == address: #non stampa se stesso
+                    agenti.append(tmp)
                 tmp = self.c_instance.functions.trasformatori(i).call()
         else:
             tmp = self.c_instance.functions.clienti(i).call()
@@ -114,5 +115,42 @@ class blockchain:
         except Exception as problema:
             print(str(problema))
             return False
+
+
+    def aggiungi_azione(self, address, azione, id_lotto, CO2):
+        try:
+            self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': address})
+            return True
+        except Exception as problema:
+            print(str(problema))
+            return False
+
+    def crea_nft_trasformatore(self, address, id_vecchio_nft, id_lotto):
+        try:
+            self.c_instance.functions.nft_trasformatore(id_vecchio_nft, id_lotto).transact({'from': address})
+            return True
+        except:
+            return False
+
+    def lettura_impronta_da_nft(self, id_nft):
+        try:
+            dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(id_nft).call()
+            info_nft = {'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
+            return info_nft
+        except Exception as problema:
+            return problema
+
+
+    def lettura_impronta_da_lotto(self, id_lotto):
+        id_nft = self.c_instance.functions.ricerca_lotto(id_lotto).call()
+        if not id_nft == 0:
+            return self.lettura_impronta_da_nft(id_nft)
+        else:
+            return "Lotto inesistente"
+
+
+    #TODO vedere se si può usare questa funzione in lista_nft()
+
+
 
         #TODO gestione errori con variabile debug

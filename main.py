@@ -91,7 +91,7 @@ def fornitore_home():
                 if bch.crea_nft_fornitore(address, id_lotto, CO2):
                     print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
                 else:
-                    print("NFT non creato")
+                    print(bcolors.FAIL + "NFT non creato" + bcolors.ENDC)
             if s_fornitore == "q":
                 if (bch.blocco_account(address)):
                     print("logout eseguito")
@@ -106,16 +106,65 @@ def fornitore_home():
                 if bch.trasferisci_nft(destinatario, int(id_nft), address):
                     print(bcolors.OKGREEN + "Trasferimento NFT", id_nft, "verso", destinatario, "è riuscito" + bcolors.ENDC)
 
-            # TODO GESTISCI ALTRE AZIONI FORNITORE
-
-
 def trasformatore_home():
     print("Buongiorno sig. trasformatore")
+
+    address = login(2)  # funzione per sblocco account
+    if not address:
+        pass  # se è stato chiesto un logout o lo sblocco non è andato a buon fine
+    else:
+        while (True):
+            s_trasformatore = menu_trasformatore()
+            if s_trasformatore == "1":
+                azione = input_val(messaggio="Inserisci l'azione da aggiungere: ", max_len=30)
+                id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20))
+                CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10))
+                if bch.aggiungi_azione(address, azione,id_lotto,CO2):
+                    print(bcolors.OKGREEN + "Azione sul lotto numero", id_lotto,"aggiunta con successo" + bcolors.ENDC)
+                else:
+                    print(bcolors.FAIL + "Azione non aggiunta" + bcolors.ENDC)
+            if s_trasformatore == "2":
+                id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20))
+                id_nft = int(input_val(messaggio="Inserisci l'id NFT attuale relativo al lotto numero " + str(id_lotto) + ": ", max_len=10))
+                if bch.crea_nft_trasformatore(address, id_nft, id_lotto):
+                    print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
+                else:
+                    print(bcolors.FAIL + "NFT non creato" + bcolors.ENDC)
+            if s_trasformatore == "q":
+                if (bch.blocco_account(address)):
+                    print("logout eseguito")
+                break
+            if s_trasformatore == "3":
+                print(bch.lista_nft(address))
+            if s_trasformatore == "4":
+                print("Elenco trasformatori esistenti")
+                print(bch.ricerca_agenti(2,address))
+                destinatario = input_val(messaggio="Inserisci destinatario dell'NFT: ", max_len=43)
+                id_nft = input_val(messaggio="Inserisci id NFT: ", max_len=20)
+                if bch.trasferisci_nft(destinatario, int(id_nft), address):
+                    print(bcolors.OKGREEN + "Trasferimento NFT", id_nft, "verso", destinatario,
+                          "è riuscito" + bcolors.ENDC)
 
 
 def cliente_home():
     print("Buongiorno sig. cliente")
 
+    address = login(3)  # funzione per sblocco account
+    if not address:
+        pass  # se è stato chiesto un logout o lo sblocco non è andato a buon fine
+    else:
+        while (True):
+            s_cliente = menu_cliente()
+            if s_cliente == "1":
+                id_nft = int(input_val(messaggio="Inserisci l'id NFT da leggere: ", max_len=10))
+                print(bch.lettura_impronta_da_nft(id_nft))
+            if s_cliente == "2":
+                id_lotto = int(input_val(messaggio="Inserisci l'id lotto da leggere: ", max_len=10))
+                print(bch.lettura_impronta_da_lotto(id_lotto))
+            if s_cliente == "q":
+                if (bch.blocco_account(address)):
+                    print("logout eseguito")
+                    break
 
 if __name__ == "__main__":
 

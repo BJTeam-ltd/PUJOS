@@ -49,11 +49,32 @@ Admin:
 
 
 def menu_fornitore():
-    print('''************************
-Fornitore:
- \033[93m 1\033[0m - Crea il tuo NFT
- \033[93m 2\033[0m - I tuoi NFT 
- \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
- \033[96m q\033[0m - Logout
-************************''')
+    print('''    ************************
+    Fornitore:
+     \033[93m 1\033[0m - Crea il tuo NFT
+     \033[93m 2\033[0m - I tuoi NFT 
+     \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
+     \033[96m q\033[0m - Logout
+    ************************''')
+    return input_val(max_len=1)
+
+
+def menu_trasformatore():
+    print('''    ************************
+    Trasformatore:
+     \033[93m 1\033[0m - Aggiungi azioni del lotto   #nome da sistemare 
+     \033[93m 2\033[0m - Crea il tuo NFT
+     \033[93m 3\033[0m - I tuoi NFT 
+     \033[93m 4\033[0m - Trasferisci NFT ad un altro trasformatore
+     \033[96m q\033[0m - Logout
+    ************************''')
+    return input_val(max_len=1)
+
+def menu_cliente():
+    print('''    ************************
+    Cliente:
+     \033[93m 1\033[0m - Lettura impronta tramite id NFT
+     \033[93m 2\033[0m - Lettura impronta tramite id lotto
+     \033[96m q\033[0m - Logout
+    ************************''')
     return input_val(max_len=1)
