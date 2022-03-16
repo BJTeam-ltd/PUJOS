@@ -32,8 +32,7 @@ class blockchain:
     def inserimento_account(self, priv_key, password):
         try:
             # inserisce l'account nella lista del nodo della blockchain con una nuova password
-            # self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
-            self.w3.parity.personal.importRawKey(priv_key, password) #TODO geth non funziona, parity sì
+            self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
             return True  # ritorna vero se l'inserimento è riuscito
         except:
             return False
@@ -76,7 +75,7 @@ class blockchain:
 
     def sblocco_account(self, address, password):
         try:
-            self.w3.parity.personal.unlockAccount(address, password) #duration = 1200
+            self.w3.geth.personal.unlock_account(account = address, passphrase = password, duration = 1200)
             return True
         except Exception as problema:
             print(str(problema))
@@ -84,7 +83,7 @@ class blockchain:
 
     def blocco_account(self, address):
         try:
-            #self.w3.geth.personal.lock_account(account = address)
+            self.w3.geth.personal.lock_account(account = address)
             return True
         except Exception as problema:
             print(str(problema))
