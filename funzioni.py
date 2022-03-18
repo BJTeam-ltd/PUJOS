@@ -1,5 +1,7 @@
 from eth_account import Account
 import secrets
+from texttable import Texttable
+
 
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
@@ -40,3 +42,20 @@ def genera_portafoglio():
     acct = Account.from_key(private_key)
     return private_key, acct.address
 
+
+# Stampa una tabella con titolo e dati passati per parametri
+#  se i dati di ogni elemento sono più degli elementi del titolo li tronca
+#  accetta in input un array di stringhe per il titolo, array di stringhe o lista di dizionari per i dati
+def stampa_tabella(titolo, dati):
+    t = Texttable()
+    t.header(titolo)        # titolo tabella
+
+    for i in range(0, len(dati)):       # itera sulla lista di dizionari in input
+        if type(dati[i]) != str:
+            sel_val = list(dati[i].values())[0:len(titolo)]     # tronca gli elementi in eccesso
+        else:
+            sel_val = [dati[i]]
+        t.add_row(sel_val)     # aggiunge la riga alla tabella
+
+    print(t.draw())
+    print("")
