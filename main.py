@@ -1,6 +1,14 @@
 from menu import *
 from blockchain import blockchain
 from funzioni import *
+import json
+import codecs
+
+errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
+
+
+print(errori[0]["2"] )
+
 
 bch = blockchain()
 
