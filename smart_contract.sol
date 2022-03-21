@@ -77,7 +77,7 @@ contract NFT is ERC721, Ownable {
     // Solo il fornitore può creare un nft da zero, il suo nft non punta a nessun altro nft. Non può ricevere nft.
     function nft_fornitore(uint256 _id_lotto, uint256  _CO2) public {
         require(controllo_account(msg.sender, 1), "Non sei un fornitore");
-        require(controllo_lotto(address(0), _id_lotto) != 0, "Questo ID lotto e' gia' associato ad un altro nft");
+        require(controllo_lotto(address(0), _id_lotto) == 0, "Questo ID lotto e' gia' associato ad un altro nft");
         createItem(msg.sender, _id_lotto, _CO2, 0);
     }
 
@@ -172,8 +172,8 @@ contract NFT is ERC721, Ownable {
         for (uint256 id = tokenIds; id >= 1; id--){ // Procede dall'ultimo creato verso il primo
            if (token[id].id_lotto == _id_lotto){
                // entro qui se esiste il lotto
-               if (_sender == address(0)){   // stiamo controllando se il lotto esiste già o si può creare
-                   return id;
+               if (_sender == address(0)){
+                   return id;   // il lotto esiste
                }
                else if (_sender == ownerOf(id)){
                     return id;  // Il lotto esiste e l'ultimo nft associato è di _sender
