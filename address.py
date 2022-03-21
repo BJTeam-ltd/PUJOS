@@ -1,4 +1,4 @@
 
-contract_address = "0xa6A559D1FE8D7C4D8CA22c77CD6CF9f298e00496" #Indirizzo smart contract quando caricato
+contract_address = "0xBca0fDc68d9b21b5bfB16D784389807017B2bbbc" #Indirizzo smart contract quando caricato
 
-admin_address = "0xca843569e3427144cead5e4d5999a3d0ccf92b8e" #Indirizzo admin
+admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6" #Indirizzo admin
