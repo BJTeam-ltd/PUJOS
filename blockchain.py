@@ -33,8 +33,7 @@ class blockchain:
     def inserimento_account(self, priv_key, password):
         try:
             # inserisce l'account nella lista del nodo della blockchain con una nuova password
-            # self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
-            self.w3.parity.personal.importRawKey(priv_key, password) #TODO geth non funziona, parity sì
+            self.w3.parity.personal.importRawKey(priv_key, password)
             return True  # ritorna vero se l'inserimento è riuscito
         except:
             return False
@@ -120,9 +119,9 @@ class blockchain:
         return token_posseduti
 
 
-    def trasferisci_nft(self, destinatario, id_nft, address):
+    def trasferisci_nft(self, destinatario, id_lotto, address):
         try:
-            self.c_instance.functions.trasferimento_nft(destinatario, id_nft).transact({'from': address})
+            self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': address})
             return True
         except Exception as problema:
             print(str(problema))
@@ -138,9 +137,9 @@ class blockchain:
             return False
 
 
-    def crea_nft_trasformatore(self, address, id_vecchio_nft, id_lotto):
+    def crea_nft_trasformatore(self, address, id_lotto):
         try:
-            self.c_instance.functions.nft_trasformatore(id_vecchio_nft, id_lotto).transact({'from': address})
+            self.c_instance.functions.nft_trasformatore(id_lotto).transact({'from': address})
             return True
         except:
             return False
@@ -156,7 +155,7 @@ class blockchain:
 
 
     def lettura_impronta_da_lotto(self, id_lotto):
-        id_nft = self.c_instance.functions.ricerca_lotto(id_lotto).call()
+        id_nft = self.c_instance.functions.controllo_lotto(null_address, id_lotto).call()
         if not id_nft == 0:
             return self.lettura_impronta_da_nft(id_nft)
         else:
