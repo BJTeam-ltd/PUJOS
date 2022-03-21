@@ -1,0 +1,14 @@
+﻿[{
+    "1": "L'account esiste gia",
+    "2": "Non si puo inserire un account nullo",
+    "3": "Non sei un fornitore",
+    "4": "Questo ID lotto e' gia' associato ad un altro nft",
+    "5": "Non sei un trasformatore",
+    "6": "Non sei il proprietario dell'ultimo NFT associato al lotto o il lotto e' inesistente",
+    "7": "Questo token non esiste",
+    "8": "Stai trasferendo questo NFT a te stesso",
+    "9": "Il destinatario e' un fornitore, non puo' ricevere nft",
+    "10": "Sei un cliente, non puoi trasferire nft",
+    "11": "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni"
+}]
+
