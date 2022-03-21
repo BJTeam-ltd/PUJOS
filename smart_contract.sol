@@ -35,10 +35,10 @@ contract NFT is ERC721, Ownable {
     function aggiungi_agenti(uint8 _tipo, address _nuovo_account) public onlyOwner returns (address) {
         
         //Controllo che l'account non sia già registrato
-        require(!controllo_account(_nuovo_account, 1) && !controllo_account(_nuovo_account, 2) && !controllo_account(_nuovo_account, 3), "L'account esiste gia");
+        require(!controllo_account(_nuovo_account, 1) && !controllo_account(_nuovo_account, 2) && !controllo_account(_nuovo_account, 3), "1"); //L'account esiste gia
 
         //Controllo che l'account non sia nullo (indirizzo non valido)
-        require(_nuovo_account != address(0), "Non si puo inserire un account nullo");
+        require(_nuovo_account != address(0), "2"); //Non si puo inserire un account nullo
 
         // Posso creare fornitori (1), trasformatori (2), clienti (3)
         assert(_tipo >=1 && _tipo <= 3);
@@ -76,8 +76,8 @@ contract NFT is ERC721, Ownable {
     // Creazione nft del fornitore
     // Solo il fornitore può creare un nft da zero, il suo nft non punta a nessun altro nft. Non può ricevere nft.
     function nft_fornitore(uint256 _id_lotto, uint256  _CO2) public {
-        require(controllo_account(msg.sender, 1), "Non sei un fornitore");
-        require(controllo_lotto(address(0), _id_lotto) == 0, "Questo ID lotto e' gia' associato ad un altro nft");
+        require(controllo_account(msg.sender, 1), "3"); //Non sei un fornitore
+        require(controllo_lotto(address(0), _id_lotto) == 0, "4"); //Questo ID lotto e' gia' associato ad un altro nft
         createItem(msg.sender, _id_lotto, _CO2, 0);
     }
 
@@ -87,11 +87,11 @@ contract NFT is ERC721, Ownable {
     // Può a sua volta inviare l'nft ad un nuovo trasformatore.
     // Il suo nft punta sempre ad un altro nft, quello precedente associato al lotto.
     function nft_trasformatore(uint256 _id_lotto) public {
-        require(controllo_account(msg.sender, 2), "Non sei un trasformatore");
+        require(controllo_account(msg.sender, 2), "5"); //Non sei un trasformatore
 
         //Il trasformatore può usare solo gli nft nel suo portafoglio
         uint256 _old_nft_id = controllo_lotto(msg.sender, _id_lotto);
-        require(_old_nft_id != 0, "Non sei il proprietario dell'ultimo NFT associato al lotto o il lotto e' inesistente");
+        require(_old_nft_id != 0, "6"); //Non sei il proprietario dell'ultimo NFT associato al lotto o il lotto e' inesistente
 
         // Somma contributi di CO2 relativi all'id prodotto
         uint256 CO2_totale = token[_old_nft_id].CO2 + temp_CO2[_id_lotto];
@@ -136,7 +136,7 @@ contract NFT is ERC721, Ownable {
 
     // Per conoscere l'impronta, restituisce i dati relativi
     function lettura_impronta_da_id_nft(uint256 _id_nft) public view returns (uint256, uint256, uint256) {
-        require(_id_nft != 0 && _id_nft <= tokenIds, "Questo token non esiste");
+        require(_id_nft != 0 && _id_nft <= tokenIds, "7"); //Questo token non esiste
 
         return (token[_id_nft].id_lotto, token[_id_nft].CO2, token[_id_nft].old_nft_id);
     }
@@ -144,12 +144,13 @@ contract NFT is ERC721, Ownable {
 
     // Trasferimento nft, solo trasformatori e clienti possono riceverlo
     function trasferimento_nft(address _to, uint256 _id_lotto) public {
-        require(controllo_account(_to, 2) || controllo_account(_to, 3), "Il destinatario e' un fornitore, non puo' ricevere nft");
-        require(!controllo_account(msg.sender, 3), "Sei un cliente, non puoi trasferire nft");
-        require(msg.sender != _to, "Stai trasferendo questo NFT a te stesso");
+        require(msg.sender != _to, "8"); //Stai trasferendo questo NFT a te stesso
+        require(controllo_account(_to, 2) || controllo_account(_to, 3), "9"); //Il destinatario e' un fornitore, non puo' ricevere nft
+        require(!controllo_account(msg.sender, 3), "10"); //Sei un cliente, non puoi trasferire nft
+
 
         uint256 _nftId = controllo_lotto(msg.sender, _id_lotto);
-        require(_nftId != 0, "Non sei il proprietario dell'ultimo NFT associato al lotto o il lotto e' inesistente");
+        require(_nftId != 0, "6"); //Non sei il proprietario dell'ultimo NFT associato al lotto o il lotto e' inesistente
 
         safeTransferFrom(msg.sender, _to, _nftId);
     }
@@ -157,8 +158,8 @@ contract NFT is ERC721, Ownable {
 
     // Aggiunta CO2 al conteggio totale della CO2 del lotto ed emit azione
     function aggiungi_azione(string memory _nome_azione , uint256 _id_lotto, uint _CO2 ) public returns (bool) {
-        require(controllo_account(msg.sender, 2), "Non sei un trasformatore");
-        require(controllo_lotto(msg.sender, _id_lotto) != 0, "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni");
+        require(controllo_account(msg.sender, 2), "5"); //Non sei un trasformatore
+        require(controllo_lotto(msg.sender, _id_lotto) != 0, "11"); //Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni
 
         temp_CO2[_id_lotto] += _CO2;
         emit azione_trasformatore(_nome_azione, _id_lotto, _CO2);
