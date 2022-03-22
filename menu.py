@@ -37,14 +37,14 @@ def helper():
 
 
 def menu_admin():
-    print('''************************
-Admin:
- \033[93m 1\033[0m - Aggiungi Fornitore
- \033[93m 2\033[0m - Aggiungi Trasformatore
- \033[93m 3\033[0m - Aggiungi Cliente
- \033[96m b\033[0m - Elenco indirizzi
- \033[96m q\033[0m - Logout
-************************''')
+    print('''    ************************
+    Admin:
+     \033[93m 1\033[0m - Aggiungi Fornitore
+     \033[93m 2\033[0m - Aggiungi Trasformatore
+     \033[93m 3\033[0m - Aggiungi Cliente
+     \033[96m b\033[0m - Elenco indirizzi
+     \033[96m q\033[0m - Logout
+    ************************''')
     return input_val(max_len=1)
 
 
