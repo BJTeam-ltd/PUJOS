@@ -111,11 +111,8 @@ def fornitore_home():
             elif s_fornitore == "3":
                 stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(2))
                 destinatario = input_val(messaggio = "Inserisci destinatario dell'NFT: ", max_len = 43)
-                #id_nft = input_val(messaggio="Inserisci id NFT: ", max_len=20)
                 id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20)
-                #if bch.trasferisci_nft(destinatario, int(id_nft), address):
                 if bch.trasferisci_nft(destinatario, int(id_lotto), address):
-                    #print(bcolors.OKGREEN + "Trasferimento NFT", id_nft, "verso", destinatario, "è riuscito" + bcolors.ENDC)
                     print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario, "è riuscito" + bcolors.ENDC)
 
 
@@ -162,13 +159,8 @@ def trasformatore_home():
             if s_trasformatore == "4":
                 stampa_tabella(["Elenco altri trasformatori esistenti"], bch.ricerca_agenti(2, address))
                 destinatario = input_val(messaggio = "Inserisci destinatario dell'NFT: ", max_len = 43)
-                #id_nft = input_val(messaggio = "Inserisci id NFT: ", max_len=20)
                 id_lotto = input_val(messaggio = "Inserisci id lotto: ", max_len=20)
-                # TODO gestire id lotto invece che id nft
-                #if bch.trasferisci_nft(destinatario, int(id_nft), address):
                 if bch.trasferisci_nft(destinatario, int(id_lotto), address):
-                    #print(bcolors.OKGREEN + "Trasferimento NFT", id_nft, "verso", destinatario,
-                     # "riuscito" + bcolors.ENDC)
                     print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario,
                       "riuscito" + bcolors.ENDC)
 

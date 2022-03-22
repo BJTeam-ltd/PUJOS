@@ -8,7 +8,7 @@ from address import *
 class blockchain:
 
     def __init__(self):
-        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:110'))  # indirizzo nodo1
+        self.w3 = Web3(Web3.HTTPProvider(node_url))  # indirizzo nodo1
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         with open('abi', 'r') as file:
@@ -124,6 +124,7 @@ class blockchain:
             self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': address})
             return True
         except Exception as problema:
+            print(problema)
             print(str(problema))
             return False
 
