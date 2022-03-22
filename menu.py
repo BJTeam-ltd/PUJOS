@@ -62,7 +62,7 @@ def menu_fornitore():
 def menu_trasformatore():
     print('''    ************************
     Trasformatore:
-     \033[93m 1\033[0m - Aggiungi azioni del lotto   #nome da sistemare 
+     \033[93m 1\033[0m - Aggiungi un nuovo contributo di CO2 ad uno dei tuoi lotti  
      \033[93m 2\033[0m - Crea il tuo NFT
      \033[93m 3\033[0m - I tuoi NFT 
      \033[93m 4\033[0m - Trasferisci NFT ad un altro trasformatore
