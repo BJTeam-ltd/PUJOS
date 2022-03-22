@@ -169,7 +169,7 @@ contract NFT is ERC721, Ownable {
 
     // Restituisce l'id NFT se il lotto esiste e l'ultimo nft associato è di _sender, 0 altrimenti
     // Se _sender = 0 restituisce l'id dell'ultimo NFT se il lotto già esiste, 0 altrimenti
-    function controllo_lotto(address _sender, uint256 _id_lotto) private view returns (uint256) {
+    function controllo_lotto(address _sender, uint256 _id_lotto) public view returns (uint256) {
         for (uint256 id = tokenIds; id >= 1; id--){ // Procede dall'ultimo creato verso il primo
            if (token[id].id_lotto == _id_lotto){
                // entro qui se esiste il lotto
