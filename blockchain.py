@@ -148,11 +148,9 @@ class blockchain:
     def lettura_impronta_da_nft(self, id_nft):
         try:
             dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(id_nft).call()
-            info_nft = {'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
-            return info_nft
-            #titolo = ['id_NFT', 'id_lotto', 'CO2', 'NFT_precedente']
-            #dati = [str(id_nft), str(dati_nft[0]), str(dati_nft[1]), str(dati_nft[2])]
-            #return titolo, dati
+            titolo = ['id_NFT', 'id_lotto', 'CO2', 'NFT_precedente']
+            dati = [{'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}]
+            return titolo, dati
         except Exception as problema:
             raise problema
 

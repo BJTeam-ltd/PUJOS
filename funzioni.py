@@ -4,7 +4,7 @@ from texttable import Texttable
 import json, codecs
 
 errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
-
+debug = False
 
 
 # Validazione input
@@ -47,7 +47,10 @@ def gestione_errori(errore):
         else:
             print("Errore")
     except:
-        print("Errore")
+        print("Errore.")
+
+    if (debug):
+        print("Errore originale: ", errore)
 
 
 def genera_portafoglio():
@@ -59,7 +62,7 @@ def genera_portafoglio():
 
 # Stampa una tabella con titolo e dati passati per parametri
 #  se i dati di ogni elemento sono più degli elementi del titolo li tronca
-#  accetta in input un array di stringhe per il titolo, array di stringhe o lista di dizionari per i dati
+#  accetta in input un array di stringhe per il titolo, lista di stringhe o lista di dizionari per i dati
 def stampa_tabella(titolo, dati):
     t = Texttable()
     t.header(titolo)        # titolo tabella
@@ -73,4 +76,3 @@ def stampa_tabella(titolo, dati):
 
     print(t.draw())
     print("")
-

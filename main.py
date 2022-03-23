@@ -177,22 +177,20 @@ def cliente_home():
     else:
         while (True):
             s_cliente = menu_cliente()
-            if s_cliente == "1":
+            if s_cliente == "1":    # Lettura impronta da id nft
                 id_nft = input_val(messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=10)
                 if(id_nft != "q"):
                     try:
-                        #titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
-                        #stampa_tabella(titolo, dati)
-                        print(bch.lettura_impronta_da_nft(int(id_nft)))
+                        titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
+                        stampa_tabella(titolo, dati)
                     except Exception as p:
                         gestione_errori(p)
-            elif s_cliente == "2":
+            elif s_cliente == "2":  # Lettura impronta da id lotto
                 id_lotto = input_val(messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=10)
                 if(id_lotto != "q"):
                     try:
-                        #titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
-                        #stampa_tabella(titolo, dati)
-                        print(bch.lettura_impronta_da_lotto(int(id_lotto)))
+                        titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
+                        stampa_tabella(titolo, dati)
                     except Exception as p:
                         gestione_errori(p)
             elif s_cliente == "q":
