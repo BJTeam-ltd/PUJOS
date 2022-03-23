@@ -1,12 +1,16 @@
 from eth_account import Account
 import secrets
 from texttable import Texttable
+import json, codecs
+
+errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
+
 
 
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
-def input_val(max_len = 66, max_retry = 5, messaggio = ""):
+def input_val(max_len = 66, max_retry = 5, messaggio = "", min_len = 1):
     validated = False   # Input non ancora validato
 
     while not validated:
@@ -33,7 +37,18 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
         passw = "passwordsicura"
     return passw
 
-#TODO richiedere lunghezza minima per passw
+
+def gestione_errori(errore):
+    try:
+        errore = str(errore)
+        e = int(errore[(len(errore) - 2):])
+        if str(e) in errori[0]:
+            print(errori[0][str(e)])
+        else:
+            print("Errore")
+    except:
+        print("Errore")
+
 
 def genera_portafoglio():
     priv = secrets.token_hex(32)
@@ -58,3 +73,4 @@ def stampa_tabella(titolo, dati):
 
     print(t.draw())
     print("")
+

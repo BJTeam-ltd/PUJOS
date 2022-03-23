@@ -4,8 +4,6 @@ from funzioni import *
 import json
 import codecs
 
-errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
-
 
 bch = blockchain()
 
@@ -149,9 +147,9 @@ def trasformatore_home():
                         print(bcolors.FAIL + "NFT non creato" + bcolors.ENDC)
 
             elif s_trasformatore == "3":
-                mostra_tutti = input_val(messaggio = "Vuoi mostrare anche gli nft non più utilizzabili?: y/n", max_len = 1)
-                if (mostra_tutti in {"y", "n"}):
-                    all = (mostra_tutti == "y")
+                mostra_tutti = input_val(messaggio = "Vuoi mostrare anche gli nft non più utilizzabili?: s/n ", max_len = 1)
+                if (mostra_tutti in {"s", "n"}):
+                    all = (mostra_tutti == "s")
                     my_nft = bch.lista_nft(address, mostra_tutti=all)
                     # Creazione della tabella per mostrare gli nft
                     titolo = ['ID NFT', 'Lotto', 'CO\u2082', 'NFT precedente']
@@ -182,11 +180,21 @@ def cliente_home():
             if s_cliente == "1":
                 id_nft = input_val(messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=10)
                 if(id_nft != "q"):
-                    print(bch.lettura_impronta_da_nft(int(id_nft)))
+                    try:
+                        #titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
+                        #stampa_tabella(titolo, dati)
+                        print(bch.lettura_impronta_da_nft(int(id_nft)))
+                    except Exception as p:
+                        gestione_errori(p)
             elif s_cliente == "2":
                 id_lotto = input_val(messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=10)
                 if(id_lotto != "q"):
-                    print(bch.lettura_impronta_da_lotto(int(id_lotto)))
+                    try:
+                        #titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
+                        #stampa_tabella(titolo, dati)
+                        print(bch.lettura_impronta_da_lotto(int(id_lotto)))
+                    except Exception as p:
+                        gestione_errori(p)
             elif s_cliente == "q":
                 if (bch.blocco_account(address)):
                     print("logout eseguito")
