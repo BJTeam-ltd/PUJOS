@@ -17,7 +17,6 @@ class blockchain:
 
         self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)
 
-
     def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 

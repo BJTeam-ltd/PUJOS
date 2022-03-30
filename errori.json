@@ -10,5 +10,7 @@
     "9": "Il destinatario e' un fornitore, non puo' ricevere NFT",
     "10": "Sei un cliente, non puoi trasferire NFT",
     "11": "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni su di esso",
-    "12": "Puoi creare solamente fornitori (1), trasformatori (2), clienti (3), inserisci un numero valido"
+    "12": "Puoi creare solamente fornitori (1), trasformatori (2), clienti (3), inserisci un numero valido",
+
+    "13": "Tentativi terminati"
 }]

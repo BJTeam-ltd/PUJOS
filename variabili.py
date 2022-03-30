@@ -7,3 +7,14 @@ contract_address = "0xfb895EF64e03aA76329836725dA2e02C83eBc1FA" #Indirizzo smart
 admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6" #Indirizzo admin
 
 null_address = "0x0000000000000000000000000000000000000000"
+
+
+stati = {
+    "exit" : -100,
+    "home" : -1,
+    "admin" : 0,
+    "fornitore" : 1,
+    "trasformatore": 2,
+    "cliente": 3,
+    "aggiungi_agenti" : 4
+}

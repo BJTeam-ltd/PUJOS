@@ -1,4 +1,3 @@
-from funzioni import input_val
 
 class bcolors:
     HEADER = '\033[95m'
@@ -19,7 +18,7 @@ tipo_utente={
 }
 
 
-def scelta_utente():
+def menu_home():
     print('''------------------------
 Chi sei?:
  \033[93m 0\033[0m - Admin
@@ -29,11 +28,7 @@ Chi sei?:
  \033[96m h\033[0m - Help
  \033[96m q\033[0m - Esci
 ------------------------''')
-    return input_val(max_len=1)
 
-
-def helper():
-    print("Apri il manuale")
 
 
 def menu_admin():
@@ -45,7 +40,6 @@ def menu_admin():
      \033[96m b\033[0m - Elenco indirizzi
      \033[96m q\033[0m - Logout
     ************************''')
-    return input_val(max_len=1)
 
 
 def menu_fornitore():
