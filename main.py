@@ -1,8 +1,7 @@
 from menu import *
 from blockchain import blockchain
 from funzioni import *
-import json
-import codecs
+
 
 
 bch = blockchain()
