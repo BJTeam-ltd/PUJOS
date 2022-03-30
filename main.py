@@ -50,8 +50,10 @@ def admin_home():
 
         elif (s_admin == "q"):
             break
+        elif (s_admin == "!"):
+            pass
         else:
-            print("Inserisci un carattere valido")
+            exit(20)
 
 
 def login(tipo):
@@ -110,8 +112,10 @@ def fornitore_home():
                     id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20)
                     if bch.trasferisci_nft(destinatario, int(id_lotto), address):
                         print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario, "è riuscito" + bcolors.ENDC)
+            elif (s_fornitore == "!"):
+                pass
             else:
-                print("Inserisci un carattere valido")
+                exit(20)
 
 def trasformatore_home():
     print(bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. trasformatore" + bcolors.ENDC + bcolors.ENDC)
@@ -163,9 +167,10 @@ def trasformatore_home():
                     if bch.trasferisci_nft(destinatario, int(id_lotto), address):
                         print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario,
                           "riuscito" + bcolors.ENDC)
-
+            elif (s_trasformatore == "!"):
+                pass
             else:
-                print("Inserisci un carattere valido")
+                exit(20)
 
 
 def cliente_home():
@@ -197,8 +202,10 @@ def cliente_home():
                 if (bch.blocco_account(address)):
                     print("logout eseguito")
                     break
+            elif (s_cliente == "!"):
+                pass
             else:
-                print("Inserisci un carattere valido")
+                exit(20)
 
 if __name__ == "__main__":
 
@@ -222,9 +229,9 @@ if __name__ == "__main__":
             trasformatore_home()
         elif (utente == "3"):
             cliente_home()
-        elif (utente == "h"):
-            helper()
         elif (utente == "q"):
             exit("Arrivederci!!")
+        elif(utente=="!"):
+            pass
         else:
-            print("Inserisci un carattere valido")
+            exit(20)

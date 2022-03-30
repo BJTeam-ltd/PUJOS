@@ -10,23 +10,34 @@ debug = False
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
-def input_val(max_len = 66, max_retry = 5, messaggio = "", min_len = 1):
+def input_val(max_len = 66, max_retry = 5, messaggio = "", min_len = 1,arg = ()):
     validated = False   # Input non ancora validato
 
     while not validated:
         if max_retry <= 0:  # tentativi terminati
-            exit(5)
+            return "!"
+        else:
+            print("", end=messaggio)  # stampa un eventuale messaggio passato come parametro
+            in_str = input()    # lettura input e conteggio tentativo
+            max_retry -= 1
 
-        print("", end=messaggio)  # stampa un eventuale messaggio passato come parametro
-        in_str = input()    # lettura input e conteggio tentativo
-        max_retry -= 1
-
-        if not in_str.isalnum():        # Controllo caratteri speciali
-            print('Caratteri non ammessi')
-        elif len(in_str) > max_len:  # Controllo massima lunghezza
-            print('Input troppo lungo')
-        else:   # Se i controlli sono passati, l'input è validato
-            validated = True
+            if not in_str.isalnum():        # Controllo caratteri speciali
+                if (max_retry > 0):
+                    print('Caratteri non ammessi, riprova:')
+                else:
+                    print('Caratteri non ammessi')
+            elif len(in_str) > max_len:  # Controllo massima lunghezza
+                if(max_retry>0):
+                    print('Input troppo lungo, riprova:')
+                else:
+                    print('Input troppo lungo')
+            elif arg and not in_str in arg:
+                if (max_retry > 0):
+                    print('Caratteri non ammessi, riprova:')
+                else:
+                    print('Caratteri non ammessi')
+            else:   # Se i controlli sono passati, l'input è validato
+                validated = True
 
     return in_str
 

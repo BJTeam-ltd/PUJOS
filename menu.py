@@ -26,14 +26,9 @@ Chi sei?:
  \033[93m 1\033[0m - Fornitore
  \033[93m 2\033[0m - Trasformatore
  \033[93m 3\033[0m - Cliente
- \033[96m h\033[0m - Help
  \033[96m q\033[0m - Esci
 ------------------------''')
-    return input_val(max_len=1)
-
-
-def helper():
-    print("Apri il manuale")
+    return input_val(max_len=1, arg=("0","1","2","3","q"))
 
 
 def menu_admin():
@@ -45,7 +40,7 @@ def menu_admin():
      \033[96m b\033[0m - Elenco indirizzi
      \033[96m q\033[0m - Logout
     ************************''')
-    return input_val(max_len=1)
+    return input_val(max_len=1, arg=("1","2","3","b","q"))
 
 
 def menu_fornitore():
@@ -56,7 +51,7 @@ def menu_fornitore():
      \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
      \033[96m q\033[0m - Logout
     ************************''')
-    return input_val(max_len=1)
+    return input_val(max_len=1,arg=("1","2","3","q") )
 
 
 def menu_trasformatore():
@@ -68,7 +63,7 @@ def menu_trasformatore():
      \033[93m 4\033[0m - Trasferisci NFT ad un altro trasformatore
      \033[96m q\033[0m - Logout
     ************************''')
-    return input_val(max_len=1)
+    return input_val(max_len=1, arg=("1","2","3","4","q"))
 
 def menu_cliente():
     print('''    ************************
@@ -77,4 +72,4 @@ def menu_cliente():
      \033[93m 2\033[0m - Lettura impronta tramite id lotto
      \033[96m q\033[0m - Logout
     ************************''')
-    return input_val(max_len=1)
+    return input_val(max_len=1, arg=("1","2","q"))
