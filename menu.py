@@ -50,7 +50,6 @@ def menu_fornitore():
      \033[93m 3\033[0m - Trasferisci NFT ad un trasformatore
      \033[96m q\033[0m - Logout
     ************************''')
-    return input_val(max_len=1)
 
 
 def menu_trasformatore():

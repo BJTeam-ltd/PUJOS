@@ -28,19 +28,33 @@ if __name__ == "__main__":
 
         if stato == stati["home"]:
 
-            stato = stato_home()  # Stampa il menù per la scelta utente
+            stato = stato_home(bch)  # Stampa il menù per la scelta utente
+
 
         elif stato == stati["exit"]:
 
             exit("Arrivederci!!")
 
+
         elif stato == stati["admin"]:
 
-            stato,tipo = stato_admin_home(bch)
+            stato = stato_admin_home(bch)
+
 
         elif stato == stati["aggiungi_agenti"]:
 
-            stato = stato_aggiungi_agenti(bch,tipo)
+            stato = stato_aggiungi_agenti(bch)
+
+
+        elif stato == stati["login"]:
+
+            stato = stato_login(bch)
+
+
+        elif stato == stati["fornitore"]:
+
+            stato = stato_fornitore_home(bch)
+
 
 
 

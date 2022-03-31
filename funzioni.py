@@ -10,20 +10,25 @@ errori = errori[0]
 debug = False
 
 
-def stato_home():
+def stato_home(bch):
     menu_home()
 
     utente = input_val(max_len=1,arg=("0","1","2","3","q"))
 
     if (utente == "0"):
+        bch.tipo = 0
         return stati["admin"]
     elif (utente == "1"):
-        return stati["fornitore"]
+        bch.tipo = 1
+        return stati["login"]
     elif (utente == "2"):
-        return stati["trasformatore"]
+        bch.tipo = 2
+        return stati["login"]
     elif (utente == "3"):
-        return stati["cliente"]
+        bch.tipo = 3
+        return stati["login"]
     elif (utente == "q"):
+        bch.tipo = 0
         return stati["exit"]
     else:
         print("Inserisci un carattere valido")
@@ -36,22 +41,25 @@ def stato_admin_home(bch):
     input = input_val(max_len=1,arg=("1","2","3","b","q"))
 
     if input in {"1", "2", "3"}:  # tipologie di account ammessi
-        return stati["aggiungi_agenti"],int(input)
+        bch.tipo = int(input)
+        return stati["aggiungi_agenti"]
 
     elif (input == "b"):  # stampa l'elenco degli account creati
-        stampa_tabella(["Elenco Fornitori:"], bch.ricerca_agenti(1))
-        stampa_tabella(["Elenco Trasformatori:"], bch.ricerca_agenti(2))
-        stampa_tabella(["Elenco Clienti:"], bch.ricerca_agenti(3))
-        return stati["admin"],0
+        stampa_tabella(["Elenco Fornitori:"], bch.ricerca_agenti(1,True))
+        stampa_tabella(["Elenco Trasformatori:"], bch.ricerca_agenti(2, True))
+        stampa_tabella(["Elenco Clienti:"], bch.ricerca_agenti(3, True))
+        bch.tipo = 0
+        return stati["admin"]
 
     elif (input == "q"):
-         return stati["home"],0
+        bch.tipo = 0
+        return stati["home"]
 
 
-def stato_aggiungi_agenti(bch, tipo):
+def stato_aggiungi_agenti(bch):
 
     # Inserisce un nuovo agente
-    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(tipo) + ", " +
+    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(bch.tipo) + ", " +
               bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo automaticamente, " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=42)
 
     if (address != "q"):    # l'admin intende inserire l'account
@@ -67,9 +75,9 @@ def stato_aggiungi_agenti(bch, tipo):
         try:
             # Scelta password di sblocco
             password = richiedi_password()
-
+            bch.address = address
             # Aggiunta account nella blockchain
-            bch.aggiunta_agenti(tipo, address)
+            bch.aggiunta_agenti()
 
             # Inserimento account nel nodo corrente
             if bch.inserimento_account(private_key, password):
@@ -81,9 +89,37 @@ def stato_aggiungi_agenti(bch, tipo):
         except Exception as problema:
             if str(problema) == "13":
                 print(errori["13"])
+                bch.tipo = 0
                 return stati["admin"]
             else:
                 exit()
+    else:
+        bch.tipo = 0
+        return stati["admin"]
+
+
+def stato_login(bch):
+    print(bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. " + tipo_utente[bch.tipo] + " " + bcolors.ENDC + bcolors.ENDC)
+    address = login(bch)  # funzione per sblocco account
+    if address:
+        bch.address = address
+        return stati["fornitore"]
+    else:
+        return stati["home"]    # se è stato chiesto un logout o lo sblocco non è andato a buon fine
+
+
+def stato_fornitore_home(bch):
+    menu_fornitore()
+    input = input_val(max_len=1, arg=("1", "2", "3", "q"))
+
+    if input == "q":
+        if (bch.blocco_account()):
+            print("logout eseguito")
+        return stati["home"]
+    return stati["home"]
+
+
+
 
 
 # Validazione input
@@ -126,6 +162,29 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
     if(passw == "p"):
         passw = "passwordsicura"
     return passw
+
+
+def login(bch):
+    stampa_tabella(["Elenco indirizzi esistenti"], bch.ricerca_agenti(bch.tipo, True))
+    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
+    address = input_val(max_len = 42)
+    if (address == "q"):    # logout
+        return False
+    else:
+        bch.address = address
+        if not bch.account_sbloccato():
+            password = richiedi_password()    # inserimento password account
+            logged = bch.sblocco_account(password)
+            if (logged):
+                print(bcolors.OKCYAN + "account sbloccato" + bcolors.ENDC)
+            else:
+                print(bcolors.FAIL + "errore nello sblocco dell'account" + bcolors.ENDC)
+                return False    # sblocco account non andato a buon fine, logout
+        else:
+            print(bcolors.OKCYAN + "account già sbloccato" + bcolors.ENDC)
+        return address  # se l'account era già sbloccato o è stato sbloccato
+
+
 
 
 def gestione_errori(errore):

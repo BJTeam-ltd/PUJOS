@@ -88,6 +88,7 @@ def fornitore_home():
                     print("logout eseguito")
                 break
 
+#TODO RIPARTIRE DA QUI
             elif s_fornitore == "1":
                 id_lotto = input_val(messaggio = "Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len = 20)
                 if (id_lotto != "q"):

@@ -13,8 +13,11 @@ stati = {
     "exit" : -100,
     "home" : -1,
     "admin" : 0,
-    "fornitore" : 1,
-    "trasformatore": 2,
-    "cliente": 3,
-    "aggiungi_agenti" : 4
+    "aggiungi_agenti" : 1,
+
+    "login" : 10,
+    "fornitore" : 11,
+    "trasformatore": 12,
+    "cliente": 13,
+
 }

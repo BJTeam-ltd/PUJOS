@@ -8,6 +8,9 @@ from funzioni import gestione_errori
 
 class blockchain:
 
+    address = ""
+    tipo = 0
+
     def __init__(self):
         self.w3 = Web3(Web3.HTTPProvider(node_url))  # indirizzo nodo1
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
@@ -17,14 +20,16 @@ class blockchain:
 
         self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)
 
+
+
     def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 
 
-    def account_sbloccato(self, account):  # funzione che verifica se l'account è già sbloccato
+    def account_sbloccato(self):  # funzione che verifica se l'account è già sbloccato
         lst = self.w3.geth.personal.list_wallets()  # funzione che ritorna la lista dei portafogli gestiti da geth
         for i in range(len(lst)):
-            if lst[i].accounts[0].address == account:
+            if lst[i].accounts[0].address == self.address:
                 if lst[i].status == "Unlocked":
                     return True     # se l'account passato è già sbloccato ritorno true
         return False
@@ -39,17 +44,17 @@ class blockchain:
             return False
 
 
-    def aggiunta_agenti(self, tipo, address):  # funzione che inserisce "address" alla blockchain
+    def aggiunta_agenti(self):  # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
         try:
-            tx_hash = self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
+            tx_hash = self.c_instance.functions.aggiungi_agenti(self.tipo, self.address).transact()
             tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
-            print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
+            print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(self.tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
             gestione_errori(problema)
 
     # Funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
-    def ricerca_agenti(self, tipo, address = None):
+    def ricerca_agenti(self, tipo, stampa_tutto):
         agenti = []
         i = 1
 
@@ -64,23 +69,32 @@ class blockchain:
             if "0x0000000000000000000000000000000000000000" == tmp:
                 break   # Ferma il loop quando arriva a fine mapping
             else:
-                if not tmp == address:  # Se richiesto, non stampa se stesso
+                if stampa_tutto:
+                    agenti.append(tmp)
+                elif not tmp == self.address:
+                    agenti.append(tmp)
+                i = i + 1
+
+
+
+
+                if not tmp == self.address:  # Se richiesto, non stampa se stesso
                     agenti.append(tmp)
                 i = i + 1
         return agenti
 
 
-    def sblocco_account(self, address, password):
+    def sblocco_account(self, password):
         try:
-            self.w3.geth.personal.unlock_account(account = address, passphrase = password, duration = 1200)
+            self.w3.geth.personal.unlock_account(account = self.address, passphrase = password, duration = 1200)
             return True
         except:
             return False
 
 
-    def blocco_account(self, address):
+    def blocco_account(self):
         try:
-            self.w3.geth.personal.lock_account(account = address)
+            self.w3.geth.personal.lock_account(account = self.address)
             return True
         except:
             return False
