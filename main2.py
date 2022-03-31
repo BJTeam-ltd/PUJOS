@@ -1,6 +1,6 @@
 #from menu import *
 from blockchain import blockchain
-#from variabili import *
+from variabili import * #non cancellare
 from funzioni import *
 #import json
 #import codecs
@@ -53,6 +53,19 @@ if __name__ == "__main__":
         elif stato == stati["fornitore"]:
 
             stato = stato_fornitore_home(bch, stato)
+
+        elif stato == stati["crea_nft_fornitore"]:
+
+            stato = stato_crea_nft_fornitore(bch)
+
+        elif stato == stati["lista_nft"]:
+
+            stato = stato_lista_nft(bch)
+
+        elif stato == stati["trasferisci_nft"]:
+
+            stato = stato_trasferisci_nft(bch)
+
 
 
 

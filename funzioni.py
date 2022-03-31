@@ -121,10 +121,55 @@ def stato_fornitore_home(bch, stato):
         if (bch.blocco_account()):
             print("logout eseguito")
         return stati["home"]
-    return stati["home"]
+    elif input == "1":
+        return stati["crea_nft_fornitore"]
+    elif input == "2":
+        return stati["lista_nft"]
+    elif input == "3":
+        return stati["trasferisci_nft"]
+    else:
+        exit()
 
 
+def stato_crea_nft_fornitore(bch):
+    #TODO gestire lettere possibili di ingresso a id_lotto e C02
+    id_lotto = input_val(
+        messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
+        max_len=20)
+    if (id_lotto == "q"):
+        pass
+    else:
+        CO2 = int(input_val(messaggio="Inserisci il totale di CO2 emessa in grammi: ", max_len=10))
+        if bch.crea_nft_fornitore(int(id_lotto), CO2):
+            print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
+        else:
+            print(bcolors.FAIL + "NFT non creato" + bcolors.ENDC)
+    return stati["fornitore"]
 
+
+def stato_lista_nft(bch):
+    my_nft = bch.lista_nft()
+    # Creazione della tabella per mostrare gli nft
+    titolo = ['ID NFT', 'Lotto', 'CO\u2082']
+    stampa_tabella(titolo, my_nft)
+    return stati["fornitore"]
+
+
+def stato_trasferisci_nft(bch):
+    stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(bch.tipo+1, False))
+    destinatario = input_val(
+        messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
+        max_len=43)
+    if (destinatario != "q"):
+        id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20)
+        if bch.trasferisci_nft(destinatario, int(id_lotto)):
+            print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario, "è riuscito" + bcolors.ENDC)
+    if(bch.tipo == 1):
+        return stati["fornitore"]
+    elif (bch.tipo == 2):
+        return stati["trasformatore"]
+    else:
+        exit()
 
 
 # Validazione input

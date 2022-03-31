@@ -1,6 +1,6 @@
 
-node_url = 'http://blockchain.g-ws.it:110'
-#node_url = 'http://blockchain.g-ws.it:1100' #Daniele
+#node_url = 'http://blockchain.g-ws.it:110'
+node_url = 'http://blockchain.g-ws.it:1100' #Daniele
 
 contract_address = "0xfb895EF64e03aA76329836725dA2e02C83eBc1FA" #Indirizzo smart contract quando caricato
 
@@ -31,6 +31,9 @@ stati = {
     "fornitore" : 11,
     "trasformatore": 12,
     "cliente": 13,
+    "crea_nft_fornitore": 14,
+    "lista_nft": 15,
+    "trasferisci_nft": 16
 }
 
 tipo_utente={

@@ -100,9 +100,9 @@ class blockchain:
             return False
 
 
-    def crea_nft_fornitore(self, address, id_lotto, CO2):
+    def crea_nft_fornitore(self, id_lotto, CO2):
         try:
-            self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': address})
+            self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': self.address})
             return True
         except Exception as problema:
             gestione_errori(problema)
@@ -110,12 +110,12 @@ class blockchain:
 
 
     # Stampa l'ultimo nft di ogni lotto posseduto, se come parametro si passa mostra_tutti=True, stampa anche i vecchi
-    def lista_nft(self, address, mostra_tutti=False):
+    def lista_nft(self, mostra_tutti=False):
         num_token = self.c_instance.functions.tokenIds().call()
         token_posseduti = []
 
         for i in range(num_token, 0, -1):       # chiede alla blockchain i token presenti
-            if address == self.c_instance.functions.ownerOf(i).call():  # valuta solo i token posseduti
+            if self.address == self.c_instance.functions.ownerOf(i).call():  # valuta solo i token posseduti
                 dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(i).call()
                 info_nft = {'id_NFT': i, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
 
@@ -131,9 +131,9 @@ class blockchain:
         return token_posseduti
 
 
-    def trasferisci_nft(self, destinatario, id_lotto, address):
+    def trasferisci_nft(self, destinatario, id_lotto):
         try:
-            self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': address})
+            self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': self.address})
             return True
         except Exception as problema:
             gestione_errori(problema)
