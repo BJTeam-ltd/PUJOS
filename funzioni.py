@@ -1,19 +1,20 @@
 from eth_account import Account
-from menu import *
+#from menu import *
 import secrets
 from texttable import Texttable
 import json, codecs
 from variabili import *
 
-errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
-errori = errori[0]
 debug = False
 
+errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
+errori = errori[0]
 
-def stato_home(bch):
-    menu_home()
 
-    utente = input_val(max_len=1,arg=("0","1","2","3","q"))
+def stato_home(bch, stato):
+    stampa_menu(stato)
+
+    utente = input_val(max_len = 1, arg = menu[stato].keys())
 
     if (utente == "0"):
         bch.tipo = 0
@@ -27,18 +28,21 @@ def stato_home(bch):
     elif (utente == "3"):
         bch.tipo = 3
         return stati["login"]
+    elif (utente == "h"):
+        print("Non è disponibile l'help")
+        return stato
     elif (utente == "q"):
         bch.tipo = 0
         return stati["exit"]
     else:
-        print("Inserisci un carattere valido")
+        exit(gestione_errori(99))
 
 
 # Funzione operazioni admin
-def stato_admin_home(bch):
+def stato_admin_home(bch, stato):
     print(bcolors.BOLD + bcolors.HEADER + "    Benvenuto Amministratore" + bcolors.ENDC + bcolors.ENDC)
-    menu_admin()        # mostra il menu dell'amministratore
-    input = input_val(max_len=1,arg=("1","2","3","b","q"))
+    stampa_menu(stato)        # mostra il menu dell'amministratore
+    input = input_val(max_len = 1, arg = menu[stato].keys())
 
     if input in {"1", "2", "3"}:  # tipologie di account ammessi
         bch.tipo = int(input)
@@ -108,9 +112,10 @@ def stato_login(bch):
         return stati["home"]    # se è stato chiesto un logout o lo sblocco non è andato a buon fine
 
 
-def stato_fornitore_home(bch):
-    menu_fornitore()
-    input = input_val(max_len=1, arg=("1", "2", "3", "q"))
+def stato_fornitore_home(bch, stato):
+    stampa_menu(stato)
+
+    input = input_val(max_len = 1, arg = menu[stato].keys())
 
     if input == "q":
         if (bch.blocco_account()):
@@ -125,7 +130,8 @@ def stato_fornitore_home(bch):
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
-def input_val(max_len = 66, max_retry = 5, messaggio = "", min_len = 1,arg = ()):
+def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = ()):
+
     validated = False   # Input non ancora validato
 
     while not validated:
@@ -225,3 +231,18 @@ def stampa_tabella(titolo, dati):
 
     print(t.draw())
     print("")
+
+
+def stampa_menu(stato):
+    print("\n************************")
+    _menu = menu[stato]
+    for key, value in _menu.items():
+        if key == "titolo":
+            print(value)
+        else:
+            if key.isdigit():
+                color = "\033[93m"
+            else:
+                color = "\033[96m"
+            print(color + key + "\033[0m" + ' - ' + value)
+    print("************************")

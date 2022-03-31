@@ -12,5 +12,6 @@
     "11": "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni su di esso",
     "12": "Puoi creare solamente fornitori (1), trasformatori (2), clienti (3), inserisci un numero valido",
 
-    "13": "Tentativi terminati"
+    "13": "Tentativi terminati",
+    "99": "Errore grave nel sistema"
 }]

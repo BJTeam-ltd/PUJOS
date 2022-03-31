@@ -1,10 +1,9 @@
-from menu import *
+#from menu import *
 from blockchain import blockchain
-from variabili import *
+#from variabili import *
 from funzioni import *
-import json
-import codecs
-
+#import json
+#import codecs
 
 
 bch = blockchain()
@@ -28,7 +27,7 @@ if __name__ == "__main__":
 
         if stato == stati["home"]:
 
-            stato = stato_home(bch)  # Stampa il menù per la scelta utente
+            stato = stato_home(bch, stato)  # Stampa il menù per la scelta utente
 
 
         elif stato == stati["exit"]:
@@ -38,7 +37,7 @@ if __name__ == "__main__":
 
         elif stato == stati["admin"]:
 
-            stato = stato_admin_home(bch)
+            stato = stato_admin_home(bch, stato)
 
 
         elif stato == stati["aggiungi_agenti"]:
@@ -53,7 +52,7 @@ if __name__ == "__main__":
 
         elif stato == stati["fornitore"]:
 
-            stato = stato_fornitore_home(bch)
+            stato = stato_fornitore_home(bch, stato)
 
 
 

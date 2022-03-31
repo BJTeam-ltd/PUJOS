@@ -1,12 +1,24 @@
 
-#node_url = 'http://blockchain.g-ws.it:110'
-node_url = 'http://blockchain.g-ws.it:1100' #Daniele
+node_url = 'http://blockchain.g-ws.it:110'
+#node_url = 'http://blockchain.g-ws.it:1100' #Daniele
 
 contract_address = "0xfb895EF64e03aA76329836725dA2e02C83eBc1FA" #Indirizzo smart contract quando caricato
 
 admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6" #Indirizzo admin
 
 null_address = "0x0000000000000000000000000000000000000000"
+
+
+class bcolors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKCYAN = '\033[96m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
 
 
 stati = {
@@ -19,5 +31,62 @@ stati = {
     "fornitore" : 11,
     "trasformatore": 12,
     "cliente": 13,
+}
 
+tipo_utente={
+    0 : "Admin",
+    1 : "Fornitore",
+    2 : "Trasformatore",
+    3 : "Cliente"
+}
+
+comandi_menu_home = {
+    "titolo" : "Chi sei?:",
+    "0" : "Admin",
+    "1" : "Fornitore",
+    "2" : "Trasformatore",
+    "3" : "Cliente",
+    "h" : "Help",
+    "q" : "Termina esecuzione"
+}
+
+comandi_menu_admin = {
+    "titolo" : "Admin:",
+    "1" : "Aggiungi Fornitore",
+    "2" : "Aggiungi Trasformatore",
+    "3" : "Aggiungi Cliente",
+    "b" : "Elenco indirizzi",
+    "q" : "Logout"
+}
+
+comandi_menu_fornitore = {
+    "titolo" : "Fornitore:",
+    "1" : "Crea il tuo NFT",
+    "2" : "I tuoi NFT",
+    "3" : "Trasferisci NFT ad un trasformatore",
+    "q" : "Logout"
+}
+
+comandi_menu_trasformatore = {
+    "titolo" : "Trasformatore:",
+    "1" : "Aggiungi un nuovo contributo di CO2 ad uno dei tuoi lotti",
+    "2" : "Crea il tuo NFT",
+    "3" : "I tuoi NFT",
+    "4" : "Trasferisci NFT ad un altro trasformatore",
+    "q" : "Logout"
+}
+
+comandi_menu_cliente = {
+    "titolo" : "Cliente:",
+    "1" : "Lettura impronta tramite id NFT",
+    "2" : "Lettura impronta tramite id lotto",
+    "q" : "Logout"
+}
+
+menu = {
+    -1 : comandi_menu_home,
+    0 : comandi_menu_admin,
+    11 : comandi_menu_fornitore,
+    12 : comandi_menu_trasformatore,
+    13 : comandi_menu_cliente,
 }

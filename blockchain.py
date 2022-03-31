@@ -1,8 +1,8 @@
-from hexbytes import HexBytes
+#from hexbytes import HexBytes
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
-from menu import tipo_utente, bcolors
-from address import *
+#from menu import tipo_utente, bcolors
+from variabili import *
 from funzioni import gestione_errori
 
 
