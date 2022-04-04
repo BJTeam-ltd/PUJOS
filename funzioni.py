@@ -200,35 +200,38 @@ def stato_trasferisci_nft(bch):
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
-def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = ()):
-
+def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None):
+    # tipo = None (tutto ammesso), "cifre" (solo cifre o "q")
     validated = False   # Input non ancora validato
 
     while not validated:
-        if max_retry <= 0:  # tentativi terminati
-            raise Exception("13")
-        else:
-            print("", end=messaggio)  # stampa un eventuale messaggio passato come parametro
-            in_str = input()    # lettura input e conteggio tentativo
-            max_retry -= 1
 
-            if not in_str.isalnum():        # Controllo caratteri speciali
-                if (max_retry > 0):
-                    print('Caratteri non ammessi, riprova:')
-                else:
-                    print('Caratteri non ammessi')
-            elif len(in_str) > max_len:  # Controllo massima lunghezza
-                if(max_retry>0):
-                    print('Input troppo lungo, riprova:')
-                else:
-                    print('Input troppo lungo')
-            elif arg and not in_str in arg:
-                if (max_retry > 0):
-                    print('Caratteri non ammessi, riprova:')
-                else:
-                    print('Caratteri non ammessi')
-            else:   # Se i controlli sono passati, l'input è validato
-                validated = True
+        print("", end = messaggio)  # Stampa un eventuale messaggio passato come parametro
+        in_str = input()    # Lettura input e conteggio tentativo
+        max_retry -= 1
+        avviso = "Caratteri non ammessi, riprova:"
+
+        if not in_str.isalnum():
+            pass    # Sono presenti caratteri speciali
+
+        elif len(in_str) > max_len:
+            # L'input supera la lunghezza massima
+            avviso = "Input troppo lungo, riprova:"
+
+        elif arg and not in_str in arg:
+            pass    # L'input non è compreso nella lista ammessa
+
+        elif tipo == "cifre" and not (in_str.isdigit() or in_str == "q"):
+            pass    # È richiesta una cifra o una q ma non è soddisfatta
+
+        else:   # Se i controlli sono passati, l'input è validato
+            validated = True
+
+        if max_retry >= 0:
+            print(avviso)
+        else:
+            # Tentativi terminati, errore
+            raise Exception("13")
 
     return in_str
 
