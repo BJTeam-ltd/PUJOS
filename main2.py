@@ -52,3 +52,12 @@ if __name__ == "__main__":
 
         elif stato == stati["trasferisci_nft"]:
             stato = stato_trasferisci_nft(bch)
+
+        elif stato == stati["cliente"]:
+            stato = stato_cliente_home(bch, stato)
+
+        elif stato == stati["stato_lettura_nft"]:
+            stato = stato_lettura_nft(bch)
+
+        elif stato == stati["stato_lettura_lotto"]:
+            stato = stato_lettura_lotto(bch)
