@@ -266,15 +266,13 @@ def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None
             pass    # È richiesta una cifra o una q ma non è soddisfatta
 
         else:   # Se i controlli sono passati, l'input è validato
-            validated = True
+            return in_str
 
-        if max_retry >= 0:
+        if max_retry > 0:
             print(avviso)
         else:
             # Tentativi terminati, errore
             raise Exception("13")
-
-    return in_str
 
 
 def richiedi_password():        # Chiede di scegliere una password, se non inserita, la sceglie in automatico
