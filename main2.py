@@ -1,9 +1,7 @@
-#from menu import *
+
 from blockchain import blockchain
-from variabili import * #non cancellare
+from variabili import *
 from funzioni import *
-#import json
-#import codecs
 
 
 bch = blockchain()
@@ -26,52 +24,31 @@ if __name__ == "__main__":
     while True:
 
         if stato == stati["home"]:
-
             stato = stato_home(bch, stato)  # Stampa il menù per la scelta utente
 
-
         elif stato == stati["exit"]:
-
             exit("Arrivederci!!")
 
-
         elif stato == stati["admin"]:
-
             stato = stato_admin_home(bch, stato)
 
-
-        elif stato == stati["aggiungi_agenti"]:
-
-            stato = stato_aggiungi_agenti(bch)
-
-
         elif stato == stati["login"]:
-
             stato = stato_login(bch)
 
-
         elif stato == stati["fornitore"]:
-
             stato = stato_fornitore_home(bch, stato)
 
-        elif stato == stati["crea_nft_fornitore"]:
+        elif stato == stati["trasformatore"]:
+            stato = stato_trasformatore_home(bch, stato)
 
+        elif stato == stati["aggiungi_agenti"]:
+            stato = stato_aggiungi_agenti(bch)
+
+        elif stato == stati["crea_nft_fornitore"]:
             stato = stato_crea_nft_fornitore(bch)
 
         elif stato == stati["lista_nft"]:
-
             stato = stato_lista_nft(bch)
 
         elif stato == stati["trasferisci_nft"]:
-
             stato = stato_trasferisci_nft(bch)
-
-
-
-
-
-
-
-
-
-

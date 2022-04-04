@@ -54,7 +54,7 @@ class blockchain:
             gestione_errori(problema)
 
     # Funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
-    def ricerca_agenti(self, tipo, stampa_tutto):
+    def ricerca_agenti(self, tipo, stampa_tutto = False):
         agenti = []
         i = 1
 
@@ -71,16 +71,10 @@ class blockchain:
             else:
                 if stampa_tutto:
                     agenti.append(tmp)
-                elif not tmp == self.address:
+                elif not tmp == self.address:   # Se richiesto, non stampa se stesso
                     agenti.append(tmp)
                 i = i + 1
 
-
-
-
-                if not tmp == self.address:  # Se richiesto, non stampa se stesso
-                    agenti.append(tmp)
-                i = i + 1
         return agenti
 
 

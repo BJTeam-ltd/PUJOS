@@ -107,7 +107,7 @@ def stato_login(bch):
     address = login(bch)  # funzione per sblocco account
     if address:
         bch.address = address
-        return stati["fornitore"]
+        return stati[tipo_utente[bch.tipo]]
     else:
         return stati["home"]    # se è stato chiesto un logout o lo sblocco non è andato a buon fine
 
@@ -128,7 +128,31 @@ def stato_fornitore_home(bch, stato):
     elif input == "3":
         return stati["trasferisci_nft"]
     else:
-        exit()
+        exit(gestione_errori(99))
+
+
+def stato_trasformatore_home(bch, stato):
+    stampa_menu(stato)
+
+    input = input_val(max_len = 1, arg = menu[stato].keys())
+
+    if input == "q":
+        if (bch.blocco_account()):
+            print("logout eseguito")
+        return stati["home"]
+    elif input == "1":
+        print("TODO")
+        return stati["aggiungi_azione"]
+    elif input == "2":
+        print("TODO")
+        return stati["crea_nft_trasformatore"]
+    elif input == "3":
+        return stati["lista_nft"]
+    elif input == "4":
+        print("TODO")
+        return stati["trasferisci_nft"]
+    else:
+        exit(gestione_errori(99))
 
 
 def stato_crea_nft_fornitore(bch):
@@ -152,11 +176,12 @@ def stato_lista_nft(bch):
     # Creazione della tabella per mostrare gli nft
     titolo = ['ID NFT', 'Lotto', 'CO\u2082']
     stampa_tabella(titolo, my_nft)
-    return stati["fornitore"]
+
+    return stati[tipo_utente[bch.tipo]]     # Torna allo stato dell'account loggato
 
 
 def stato_trasferisci_nft(bch):
-    stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(bch.tipo+1, False))
+    stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(id_utente["trasformatore"], False))
     destinatario = input_val(
         messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
         max_len=43)
@@ -217,8 +242,10 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
 
 def login(bch):
     stampa_tabella(["Elenco indirizzi esistenti"], bch.ricerca_agenti(bch.tipo, True))
+
     print("Inserisci indirizzo portafoglio", tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
     address = input_val(max_len = 42)
+
     if (address == "q"):    # logout
         return False
     else:

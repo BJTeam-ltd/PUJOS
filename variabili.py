@@ -30,17 +30,26 @@ stati = {
     "login" : 10,
     "fornitore" : 11,
     "trasformatore": 12,
-    "cliente": 13,
-    "crea_nft_fornitore": 14,
-    "lista_nft": 15,
-    "trasferisci_nft": 16
+    "cliente" : 13,
+    "crea_nft_fornitore" : 14,
+    "lista_nft" : 15,
+    "trasferisci_nft" : 16,
+    "aggiungi_azione" : 17,
+    "crea_nft_trasformatore": 18
 }
 
 tipo_utente={
-    0 : "Admin",
-    1 : "Fornitore",
-    2 : "Trasformatore",
-    3 : "Cliente"
+    0 : "admin",
+    1 : "fornitore",
+    2 : "trasformatore",
+    3 : "cliente"
+}
+
+id_utente={
+    "admin" : 0,
+    "fornitore" : 1,
+    "trasformatore" : 2,
+    "cliente" : 3
 }
 
 comandi_menu_home = {
@@ -88,7 +97,7 @@ comandi_menu_cliente = {
 
 menu = {
     -1 : comandi_menu_home,
-    0 : comandi_menu_admin,
+    0 :  comandi_menu_admin,
     11 : comandi_menu_fornitore,
     12 : comandi_menu_trasformatore,
     13 : comandi_menu_cliente,
