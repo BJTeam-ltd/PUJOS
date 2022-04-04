@@ -51,7 +51,7 @@ class blockchain:
             tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
             print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(self.tipo)) + " riuscita" + bcolors.ENDC)
         except Exception as problema:
-            gestione_errori(problema)
+            gestione_errori(problema,bch,stato)
 
     # Funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
     def ricerca_agenti(self, tipo, stampa_tutto = False):
@@ -99,7 +99,7 @@ class blockchain:
             self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': self.address})
             return True
         except Exception as problema:
-            gestione_errori(problema)
+            gestione_errori(problema,bch,stato)
             return False
 
 
@@ -126,29 +126,24 @@ class blockchain:
 
 
     def trasferisci_nft(self, destinatario, id_lotto):
+        self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': self.address})
+
+
+
+    def aggiungi_azione(self, azione, id_lotto, CO2):
         try:
-            self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': self.address})
+            self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': self.address})
+        except Exception as problema:
+            raise problema
+
+
+
+    def crea_nft_trasformatore(self, id_lotto):
+        try:
+            self.c_instance.functions.nft_trasformatore(id_lotto).transact({'from': self.address})
             return True
         except Exception as problema:
-            gestione_errori(problema)
-            return False
-
-
-    def aggiungi_azione(self, address, azione, id_lotto, CO2):
-        try:
-            self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': address})
-            return True
-        except Exception as problema:
-            gestione_errori(problema)
-            return False
-
-
-    def crea_nft_trasformatore(self, address, id_lotto):
-        try:
-            self.c_instance.functions.nft_trasformatore(id_lotto).transact({'from': address})
-            return True
-        except Exception as problema:
-            gestione_errori(problema)
+            gestione_errori(problema,bch,stato)
             return False
 
 
@@ -163,13 +158,13 @@ class blockchain:
 
 
     def lettura_impronta_da_lotto(self, id_lotto):
-        try:
-            id_nft = self.c_instance.functions.controllo_lotto(null_address, id_lotto).call()
-            if not id_nft == 0:
-                return self.lettura_impronta_da_nft(id_nft)
-            else:
-                return "Lotto Inesistente"
-        except Exception as problema:
-            raise problema
+        id_nft = self.c_instance.functions.controllo_lotto(null_address, id_lotto).call()
+        if not id_nft == 0:
+            return self.lettura_impronta_da_nft(id_nft)
+        else:
+            return ["Lotto Inesistente"],[]
+
 
 #TODO SPOSTARE GESTIONE_ERRORI SU FUNZIONI CHIAMANTI
+
+#TODO RISOLVERE BUG ULTIMO NFT

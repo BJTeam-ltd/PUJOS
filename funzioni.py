@@ -5,7 +5,7 @@ from texttable import Texttable
 import json, codecs
 from variabili import *
 
-debug = False
+debug = True
 
 errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
 errori = errori[0]
@@ -13,7 +13,8 @@ errori = errori[0]
 
 def stato_home(bch, stato):
     stampa_menu(stato)
-
+    bch.address = ""
+    bch.tipo = 0
     utente = input_val(max_len = 1, arg = menu[stato].keys())
 
     if (utente == "0"):
@@ -28,14 +29,11 @@ def stato_home(bch, stato):
     elif (utente == "3"):
         bch.tipo = 3
         return stati["login"]
-    elif (utente == "h"):
-        print("Non è disponibile l'help")
-        return stato
     elif (utente == "q"):
         bch.tipo = 0
         return stati["exit"]
     else:
-        exit(gestione_errori(99))
+        exit(gestione_errori(99,bch,stato))
 
 
 # Funzione operazioni admin
@@ -128,7 +126,7 @@ def stato_fornitore_home(bch, stato):
     elif input == "3":
         return stati["trasferisci_nft"]
     else:
-        exit(gestione_errori(99))
+        exit(gestione_errori(99,bch,stato))
 
 
 def stato_trasformatore_home(bch, stato):
@@ -141,18 +139,15 @@ def stato_trasformatore_home(bch, stato):
             print("logout eseguito")
         return stati["home"]
     elif input == "1":
-        print("TODO")
         return stati["aggiungi_azione"]
     elif input == "2":
-        print("TODO")
         return stati["crea_nft_trasformatore"]
     elif input == "3":
         return stati["lista_nft"]
     elif input == "4":
-        print("TODO")
         return stati["trasferisci_nft"]
     else:
-        exit(gestione_errori(99))
+        exit(gestione_errori(99,bch,stato))
 
 
 def stato_crea_nft_fornitore(bch):
@@ -172,29 +167,60 @@ def stato_crea_nft_fornitore(bch):
 
 
 def stato_lista_nft(bch):
-    my_nft = bch.lista_nft()
-    # Creazione della tabella per mostrare gli nft
-    titolo = ['ID NFT', 'Lotto', 'CO\u2082']
-    stampa_tabella(titolo, my_nft)
+    mostra_tutti = input_val(messaggio="Vuoi mostrare anche gli nft non più utilizzabili?: s/n ", max_len=1,arg=("s","n"))
+    if (mostra_tutti in {"s", "n"}):
+        all = (mostra_tutti == "s")
+        my_nft = bch.lista_nft(mostra_tutti=all)
+        # Creazione della tabella per mostrare gli nft
+        titolo = ['ID NFT', 'Lotto', 'CO\u2082']
+        stampa_tabella(titolo, my_nft)
 
     return stati[tipo_utente[bch.tipo]]     # Torna allo stato dell'account loggato
 
 
 def stato_trasferisci_nft(bch):
     stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(id_utente["trasformatore"], False))
+    if bch.tipo == id_utente["trasformatore"]: #i trasformatori possono trasferire anche ai clienti
+        stampa_tabella(["Elenco clienti esistenti"], bch.ricerca_agenti(id_utente["cliente"], False))
     destinatario = input_val(
         messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
         max_len=43)
     if (destinatario != "q"):
         id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20)
-        if bch.trasferisci_nft(destinatario, int(id_lotto)):
-            print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario, "è riuscito" + bcolors.ENDC)
-    if(bch.tipo == 1):
+        bch.trasferisci_nft(destinatario, int(id_lotto))
+        print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario, "è riuscito" + bcolors.ENDC)
+    if(bch.tipo == id_utente["fornitore"]):
         return stati["fornitore"]
-    elif (bch.tipo == 2):
+    elif (bch.tipo == id_utente["trasformatore"]):
         return stati["trasformatore"]
     else:
         exit()
+
+def stato_aggiungi_azione(bch,stato):
+    azione = input_val(
+        messaggio="Inserisci l'azione da aggiungere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
+        max_len=30)
+    if (azione != "q"):
+        try:
+            id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20))
+            CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10))
+            bch.aggiungi_azione(azione, id_lotto, CO2)
+            print(bcolors.OKGREEN + "Azione sul lotto numero", id_lotto, "aggiunta con successo" + bcolors.ENDC)
+        except Exception as problema:
+            gestione_errori(problema,bch,stato)
+
+    return stati["trasformatore"]
+
+
+def stato_crea_nft_trasformatore(bch):
+    id_lotto = input_val(
+        messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
+        max_len=20)
+    if (id_lotto != "q"):
+        bch.crea_nft_trasformatore(int(id_lotto))
+        print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
+
+    return stati["trasformatore"]
 
 
 def stato_cliente_home(bch, stato):
@@ -212,29 +238,26 @@ def stato_cliente_home(bch, stato):
         return stati["stato_lettura_lotto"]
 
 
-def stato_lettura_nft(bch):
+def stato_lettura_nft(bch,stato):
     id_nft = input_val(
         messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
         max_len=10)
     if id_nft != "q":
-        try:
-            titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
-            stampa_tabella(titolo, dati)
-        except Exception as p:
-            gestione_errori(p)
+        titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
+        stampa_tabella(titolo, dati)
     return stati["cliente"]
 
 
-def stato_lettura_lotto(bch):
+def stato_lettura_lotto(bch,stato):
     id_lotto = input_val(
         messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
         max_len=10)
     if id_lotto != "q":
-        try:
-            titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
+        titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
+        if titolo[0] == "Lotto Inesistente":
+            print("Lotto inesistente")
+        else:
             stampa_tabella(titolo, dati)
-        except Exception as p:
-            gestione_errori(p)
     return stati["cliente"]
 
 
@@ -307,19 +330,26 @@ def login(bch):
 
 
 
-def gestione_errori(errore):
+def gestione_errori(errore,bch,stato):
     try:
         errore = str(errore)
+        if (debug):
+            print("Errore originale: ", errore)
         e = int(errore[(len(errore) - 2):])
         if str(e) in errori:
             print(errori[str(e)])
         else:
             print("Errore")
+            exit()
+        if str(e) == "13":
+            if (bch.blocco_account()):
+                print("Logout eseguito")
+            return stati["home"]
+        else:
+            return stato
     except:
-        print("Errore.")
+        exit(errori["99"])
 
-    if (debug):
-        print("Errore originale: ", errore)
 
 
 def genera_portafoglio():

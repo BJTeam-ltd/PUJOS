@@ -8,7 +8,6 @@ bch = blockchain()
 
 stato = stati["home"]
 vecchio_stato = stati["home"]
-tipo = 0
 
 if __name__ == "__main__":
 
@@ -24,40 +23,88 @@ if __name__ == "__main__":
     while True:
 
         if stato == stati["home"]:
-            stato = stato_home(bch, stato)  # Stampa il menù per la scelta utente
+            try:
+                stato = stato_home(bch,stato)  # Stampa il menù per la scelta utente
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["exit"]:
             exit("Arrivederci!!")
 
         elif stato == stati["admin"]:
-            stato = stato_admin_home(bch, stato)
+            try:
+                stato = stato_admin_home(bch,stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["login"]:
-            stato = stato_login(bch)
+            try:
+                stato = stato_login(bch)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["fornitore"]:
-            stato = stato_fornitore_home(bch, stato)
+            try:
+                stato = stato_fornitore_home(bch,stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["trasformatore"]:
-            stato = stato_trasformatore_home(bch, stato)
+            try:
+                stato = stato_trasformatore_home(bch,stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
+
+        elif stato == stati["aggiungi_azione"]:
+            try:
+                stato = stato_aggiungi_azione(bch,stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
+
+        elif stato == stati["crea_nft_trasformatore"]:
+            try:
+                stato = stato_crea_nft_trasformatore(bch)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["aggiungi_agenti"]:
-            stato = stato_aggiungi_agenti(bch)
+            try:
+                stato = stato_aggiungi_agenti(bch)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["crea_nft_fornitore"]:
-            stato = stato_crea_nft_fornitore(bch)
+            try:
+                stato = stato_crea_nft_fornitore(bch)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["lista_nft"]:
-            stato = stato_lista_nft(bch)
+            try:
+                stato = stato_lista_nft(bch)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["trasferisci_nft"]:
-            stato = stato_trasferisci_nft(bch)
+            try:
+                stato = stato_trasferisci_nft(bch)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["cliente"]:
-            stato = stato_cliente_home(bch, stato)
+            try:
+                stato = stato_cliente_home(bch, stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["stato_lettura_nft"]:
-            stato = stato_lettura_nft(bch)
+            try:
+                stato = stato_lettura_nft(bch,stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)
 
         elif stato == stati["stato_lettura_lotto"]:
-            stato = stato_lettura_lotto(bch)
+            try:
+                stato = stato_lettura_lotto(bch,stato)
+            except Exception as problema:
+                stato = gestione_errori(problema,bch,stato)

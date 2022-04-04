@@ -60,7 +60,6 @@ comandi_menu_home = {
     "1" : "Fornitore",
     "2" : "Trasformatore",
     "3" : "Cliente",
-    "h" : "Help",
     "q" : "Termina esecuzione"
 }
 
@@ -86,7 +85,7 @@ comandi_menu_trasformatore = {
     "1" : "Aggiungi un nuovo contributo di CO2 ad uno dei tuoi lotti",
     "2" : "Crea il tuo NFT",
     "3" : "I tuoi NFT",
-    "4" : "Trasferisci NFT ad un altro trasformatore",
+    "4" : "Trasferisci NFT ad un trasformatore o cliente",
     "q" : "Logout"
 }
 
