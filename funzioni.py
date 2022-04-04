@@ -197,6 +197,47 @@ def stato_trasferisci_nft(bch):
         exit()
 
 
+def stato_cliente_home(bch, stato):
+    print(bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. cliente" + bcolors.ENDC + bcolors.ENDC)
+    stampa_menu(stato)
+    input = input_val(max_len=1, arg=menu[stato].keys())
+
+    if input == "q":
+        if (bch.blocco_account()):
+            print("logout eseguito")
+        return stati["home"]
+    elif input == "1":
+        return stati["stato_lettura_nft"]
+    elif input == "2":
+        return stati["stato_lettura_lotto"]
+
+
+def stato_lettura_nft(bch):
+    id_nft = input_val(
+        messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
+        max_len=10)
+    if id_nft != "q":
+        try:
+            titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
+            stampa_tabella(titolo, dati)
+        except Exception as p:
+            gestione_errori(p)
+    return stati["cliente"]
+
+
+def stato_lettura_lotto(bch):
+    id_lotto = input_val(
+        messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
+        max_len=10)
+    if id_lotto != "q":
+        try:
+            titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
+            stampa_tabella(titolo, dati)
+        except Exception as p:
+            gestione_errori(p)
+    return stati["cliente"]
+
+
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
