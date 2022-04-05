@@ -285,7 +285,8 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
 
 
 def login(bch):
-    stampa_tabella(["Elenco indirizzi esistenti"], bch.ricerca_agenti(bch.tipo, True))
+    lista_agenti_tipo = bch.ricerca_agenti(bch.tipo, True)
+    stampa_tabella(["Elenco indirizzi esistenti"], lista_agenti_tipo)
 
     print("Inserisci indirizzo portafoglio", tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
     address = input_val(max_len = 42)
@@ -294,15 +295,16 @@ def login(bch):
         return False
     else:
         bch.address = address
-        if not bch.account_sbloccato():
-            password = richiedi_password()    # inserimento password account
-            bch.sblocco_account(password)
-            print(bcolors.OKCYAN + "Account sbloccato" + bcolors.ENDC)
+        if address in lista_agenti_tipo:
+            if not bch.account_sbloccato():
+                password = richiedi_password()    # inserimento password account
+                bch.sblocco_account(password)
+                print(bcolors.OKCYAN + "Account sbloccato" + bcolors.ENDC)
+            else:
+                print(bcolors.OKCYAN + "Account già sbloccato" + bcolors.ENDC)
+            return address  # se l'account era già sbloccato o è stato sbloccato
         else:
-            print(bcolors.OKCYAN + "Account già sbloccato" + bcolors.ENDC)
-        return address  # se l'account era già sbloccato o è stato sbloccato
-
-
+            raise Exception("14")
 
 
 def gestione_errori(errore,bch,stato):
