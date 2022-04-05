@@ -94,7 +94,6 @@ class blockchain:
         self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': self.address})
 
 
-
     # Stampa l'ultimo nft di ogni lotto posseduto, se come parametro si passa mostra_tutti=True, stampa anche i vecchi
     def lista_nft(self, mostra_tutti=False):
         num_token = self.c_instance.functions.tokenIds().call()
@@ -106,14 +105,28 @@ class blockchain:
                 info_nft = {'id_NFT': i, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
 
                 ultimo_nft_lotto = True
-                if (i != num_token):
-                    for c in range(0, len(token_posseduti)):   # mostra l'nft più recente di ogni lotto
-                        if (dati_nft[0] == token_posseduti[c]['id_lotto']):
-                            ultimo_nft_lotto = False
+                if (i != num_token): # L'ultimo NFT per id è ovviamente l'ultimo relativo a qualunque lotto
+                    for c in range(0, len(token_posseduti)):   # itera sui token salvati in lista
+                        #if (dati_nft[0] == token_posseduti[c]['id_lotto']):
+                        if (info_nft['id_lotto'] == token_posseduti[c]['id_lotto']):
+                            ultimo_nft_lotto = False    # Se il lotto è già in lista, non è l'ultimo NFT
                             break
-                # Se non richiesto da mostra_tutti, considero solo l'ultimo token di ogni lotto
+
+                # Se non richiesto da mostra_tutti, aggiungo in lista solo l'ultimo NFT di ogni lotto
                 if ultimo_nft_lotto or mostra_tutti:
                     token_posseduti.append(info_nft)
+
+        if not mostra_tutti:    # Se devo trascurare i non utilizzabili,
+                                #  rimuovo anche quelli non sono ultimi relativi al lotto ma che ho ceduto ad altri
+            for i in range(num_token, 0, -1):       # Richiede alla blockchain un token alla volta
+                dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(i).call()
+                for c in range(0, len(token_posseduti)):  # mostra l'nft più recente di ogni lotto
+                    # Se trovo un nft con lo stesso lotto di uno in lista
+                    if (dati_nft[0] == token_posseduti[c]['id_lotto']):
+                        if i > token_posseduti[c]['id_NFT']: # Se ha id_NFT maggiore, quello in lista non è utilizzabile
+                            da_rimuovere = token_posseduti[c]
+                            token_posseduti.remove(da_rimuovere)
+                            # Lo elimino dalla lista
         return token_posseduti
 
 
@@ -121,10 +134,8 @@ class blockchain:
         self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': self.address})
 
 
-
     def aggiungi_azione(self, azione, id_lotto, CO2):
         self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': self.address})
-
 
 
     def crea_nft_trasformatore(self, id_lotto):
@@ -144,6 +155,3 @@ class blockchain:
             return self.lettura_impronta_da_nft(id_nft)
         else:
             return ["Lotto Inesistente"],[]
-
-
-#TODO RISOLVERE BUG ULTIMO NFT

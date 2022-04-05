@@ -33,7 +33,7 @@ def stato_home(bch, stato):
         bch.tipo = 0
         return stati["exit"]
     else:
-        exit(gestione_errori(99,bch,stato))
+        exit(errori["99"])
 
 
 # Funzione operazioni admin
@@ -91,7 +91,7 @@ def stato_aggiungi_agenti(bch):
 
 
 def stato_login(bch):
-    print(bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. " + tipo_utente[bch.tipo] + " " + bcolors.ENDC + bcolors.ENDC)
+    print("\n", bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. " + tipo_utente[bch.tipo] + " " + bcolors.ENDC + bcolors.ENDC)
     address = login(bch)  # funzione per sblocco account
     if address:
         bch.address = address
@@ -116,7 +116,7 @@ def stato_fornitore_home(bch, stato):
     elif input == "3":
         return stati["trasferisci_nft"]
     else:
-        exit(gestione_errori(99,bch,stato))
+        exit(errori["99"])
 
 
 def stato_trasformatore_home(bch, stato):
@@ -137,7 +137,7 @@ def stato_trasformatore_home(bch, stato):
     elif input == "4":
         return stati["trasferisci_nft"]
     else:
-        exit(gestione_errori(99,bch,stato))
+        exit(errori["99"])
 
 
 def stato_crea_nft_fornitore(bch):
@@ -177,13 +177,14 @@ def stato_trasferisci_nft(bch):
     if (destinatario != "q"):
         id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20)
         bch.trasferisci_nft(destinatario, int(id_lotto))
-        print(bcolors.OKGREEN + "Trasferimento NFT", id_lotto, "verso", destinatario, "è riuscito" + bcolors.ENDC)
+        print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
     if(bch.tipo == id_utente["fornitore"]):
         return stati["fornitore"]
     elif (bch.tipo == id_utente["trasformatore"]):
         return stati["trasformatore"]
     else:
-        exit(gestione_errori(99,bch,stato))
+        exit(errori["99"])
+
 
 def stato_aggiungi_azione(bch,stato):
     azione = input_val(
@@ -278,7 +279,7 @@ def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None
             return in_str
 
         if max_retry > 0:
-            print(avviso)
+            print(bcolors.WARNING + avviso + bcolors.ENDC)
         else:
             # Tentativi terminati, errore
             raise Exception("13")
@@ -319,7 +320,7 @@ def gestione_errori(errore,bch,stato):
             print("Errore originale: ", errore)
         e = int(errore[(len(errore) - 2):])
         if str(e) in errori:
-            print(errori[str(e)])
+            print(bcolors.WARNING + errori[str(e)] + bcolors.ENDC)
         else:
             print("Errore")
             exit()
@@ -330,8 +331,8 @@ def gestione_errori(errore,bch,stato):
         else:
             return stato
     except:
+        bch.blocco_account()
         exit(errori["99"])
-
 
 
 def genera_portafoglio():
@@ -360,17 +361,17 @@ def stampa_tabella(titolo, dati):
 
 
 def stampa_menu(stato):
-    print("\n************************")
+    print("************************")
     _menu = menu[stato]
     for key, value in _menu.items():
         if key == "titolo":
             print(value)
         else:
             if key.isdigit():
-                color = "\033[93m"
+                color = bcolors.WARNING
             else:
-                color = "\033[96m"
-            print(color + key + "\033[0m" + ' - ' + value)
+                color = bcolors.OKCYAN
+            print(color + key + bcolors.ENDC + ' - ' + value)
     print("************************")
 
 #TODO pensare a cosa fare se fallisce sblocco account (se creare errore nuovo o fare errore 99)

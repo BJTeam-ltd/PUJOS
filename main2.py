@@ -118,4 +118,4 @@ if __name__ == "__main__":
                 print("Logout eseguito")
         except:
             print("Errore nella chiusura programma")
-        print("Arrivederci!!")
+        exit("Arrivederci!!")
