@@ -36,22 +36,18 @@ class blockchain:
 
 
     def inserimento_account(self, priv_key, password):
-        try:
-            # inserisce l'account nella lista del nodo della blockchain con una nuova password
-            self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
-            return True  # ritorna vero se l'inserimento è riuscito
-        except:
-            return False
+        # inserisce l'account nella lista del nodo della blockchain con una nuova password
+        self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
 
 
     def aggiunta_agenti(self):  # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
-        try:
+        if Web3.isAddress(self.address) and Web3.isChecksumAddress(self.address):
             tx_hash = self.c_instance.functions.aggiungi_agenti(self.tipo, self.address).transact()
-            tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
-            print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(self.tipo)) + " riuscita" + bcolors.ENDC)
-        except Exception as problema:
-            gestione_errori(problema,bch,stato)
+            tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash) # TODO è inutile?
+        else:
+            raise Exception("14")
+
 
     # Funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
     def ricerca_agenti(self, tipo, stampa_tutto = False):
@@ -83,7 +79,7 @@ class blockchain:
             self.w3.geth.personal.unlock_account(account = self.address, passphrase = password, duration = 1200)
             return True
         except:
-            return False
+            raise Exception("15")
 
 
     def blocco_account(self):
@@ -95,12 +91,8 @@ class blockchain:
 
 
     def crea_nft_fornitore(self, id_lotto, CO2):
-        try:
-            self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': self.address})
-            return True
-        except Exception as problema:
-            gestione_errori(problema,bch,stato)
-            return False
+        self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': self.address})
+
 
 
     # Stampa l'ultimo nft di ogni lotto posseduto, se come parametro si passa mostra_tutti=True, stampa anche i vecchi
@@ -131,30 +123,19 @@ class blockchain:
 
 
     def aggiungi_azione(self, azione, id_lotto, CO2):
-        try:
-            self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': self.address})
-        except Exception as problema:
-            raise problema
+        self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': self.address})
 
 
 
     def crea_nft_trasformatore(self, id_lotto):
-        try:
-            self.c_instance.functions.nft_trasformatore(id_lotto).transact({'from': self.address})
-            return True
-        except Exception as problema:
-            gestione_errori(problema,bch,stato)
-            return False
+        self.c_instance.functions.nft_trasformatore(id_lotto).transact({'from': self.address})
 
 
     def lettura_impronta_da_nft(self, id_nft):
-        try:
-            dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(id_nft).call()
-            titolo = ['id_NFT', 'id_lotto', 'CO2', 'NFT_precedente']
-            dati = [{'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}]
-            return titolo, dati
-        except Exception as problema:
-            raise problema
+        dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(id_nft).call()
+        titolo = ['id_NFT', 'id_lotto', 'CO2', 'NFT_precedente']
+        dati = [{'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}]
+        return titolo, dati
 
 
     def lettura_impronta_da_lotto(self, id_lotto):
@@ -164,7 +145,5 @@ class blockchain:
         else:
             return ["Lotto Inesistente"],[]
 
-
-#TODO SPOSTARE GESTIONE_ERRORI SU FUNZIONI CHIAMANTI
 
 #TODO RISOLVERE BUG ULTIMO NFT

@@ -74,30 +74,20 @@ def stato_aggiungi_agenti(bch):
             # l'admin ha inserito un indirizzo manualmente, chiedo la relativa chiave privata
             private_key = input_val(messaggio="Inserisci la chiave privata: ")
 
-        try:
-            # Scelta password di sblocco
-            password = richiedi_password()
-            bch.address = address
-            # Aggiunta account nella blockchain
-            bch.aggiunta_agenti()
+        # Scelta password di sblocco
+        password = richiedi_password()
+        bch.address = address
+        # Aggiunta account nella blockchain
+        bch.aggiunta_agenti()
+        print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(bch.tipo)) + " riuscita" + bcolors.ENDC)
+        # Inserimento account nel nodo corrente
+        bch.inserimento_account(private_key, password)
+        print(bcolors.OKGREEN + "Indirizzo inserito nel nodo corrente" + bcolors.ENDC)
 
-            # Inserimento account nel nodo corrente
-            if bch.inserimento_account(private_key, password):
-                print("Indirizzo inserito nel nodo corrente")
-            else:
-                print(bcolors.FAIL + "Errore nell'inserimento dell'Account nel nodo" + bcolors.ENDC)
-
-            return stati["admin"]
-        except Exception as problema:
-            if str(problema) == "13":
-                print(errori["13"])
-                bch.tipo = 0
-                return stati["admin"]
-            else:
-                exit()
     else:
         bch.tipo = 0
-        return stati["admin"]
+
+    return stati["admin"]
 
 
 def stato_login(bch):
@@ -117,7 +107,7 @@ def stato_fornitore_home(bch, stato):
 
     if input == "q":
         if (bch.blocco_account()):
-            print("logout eseguito")
+            print("Logout eseguito")
         return stati["home"]
     elif input == "1":
         return stati["crea_nft_fornitore"]
@@ -136,7 +126,7 @@ def stato_trasformatore_home(bch, stato):
 
     if input == "q":
         if (bch.blocco_account()):
-            print("logout eseguito")
+            print("Logout eseguito")
         return stati["home"]
     elif input == "1":
         return stati["aggiungi_azione"]
@@ -159,10 +149,9 @@ def stato_crea_nft_fornitore(bch):
         pass
     else:
         CO2 = int(input_val(messaggio="Inserisci il totale di CO2 emessa in grammi: ", max_len=10))
-        if bch.crea_nft_fornitore(int(id_lotto), CO2):
-            print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
-        else:
-            print(bcolors.FAIL + "NFT non creato" + bcolors.ENDC)
+        bch.crea_nft_fornitore(int(id_lotto), CO2)
+        print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
+
     return stati["fornitore"]
 
 
@@ -194,20 +183,17 @@ def stato_trasferisci_nft(bch):
     elif (bch.tipo == id_utente["trasformatore"]):
         return stati["trasformatore"]
     else:
-        exit()
+        exit(gestione_errori(99,bch,stato))
 
 def stato_aggiungi_azione(bch,stato):
     azione = input_val(
         messaggio="Inserisci l'azione da aggiungere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
         max_len=30)
     if (azione != "q"):
-        try:
-            id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20))
-            CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10))
-            bch.aggiungi_azione(azione, id_lotto, CO2)
-            print(bcolors.OKGREEN + "Azione sul lotto numero", id_lotto, "aggiunta con successo" + bcolors.ENDC)
-        except Exception as problema:
-            gestione_errori(problema,bch,stato)
+        id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20))
+        CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10))
+        bch.aggiungi_azione(azione, id_lotto, CO2)
+        print(bcolors.OKGREEN + "Azione sul lotto numero", id_lotto, "aggiunta con successo" + bcolors.ENDC)
 
     return stati["trasformatore"]
 
@@ -230,7 +216,7 @@ def stato_cliente_home(bch, stato):
 
     if input == "q":
         if (bch.blocco_account()):
-            print("logout eseguito")
+            print("Logout eseguito")
         return stati["home"]
     elif input == "1":
         return stati["stato_lettura_nft"]
@@ -317,14 +303,10 @@ def login(bch):
         bch.address = address
         if not bch.account_sbloccato():
             password = richiedi_password()    # inserimento password account
-            logged = bch.sblocco_account(password)
-            if (logged):
-                print(bcolors.OKCYAN + "account sbloccato" + bcolors.ENDC)
-            else:
-                print(bcolors.FAIL + "errore nello sblocco dell'account" + bcolors.ENDC)
-                return False    # sblocco account non andato a buon fine, logout
+            bch.sblocco_account(password)
+            print(bcolors.OKCYAN + "Account sbloccato" + bcolors.ENDC)
         else:
-            print(bcolors.OKCYAN + "account già sbloccato" + bcolors.ENDC)
+            print(bcolors.OKCYAN + "Account già sbloccato" + bcolors.ENDC)
         return address  # se l'account era già sbloccato o è stato sbloccato
 
 
@@ -390,3 +372,5 @@ def stampa_menu(stato):
                 color = "\033[96m"
             print(color + key + "\033[0m" + ' - ' + value)
     print("************************")
+
+#TODO pensare a cosa fare se fallisce sblocco account (se creare errore nuovo o fare errore 99)

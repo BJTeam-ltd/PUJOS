@@ -13,5 +13,7 @@
     "12": "Puoi creare solamente fornitori (1), trasformatori (2), clienti (3), inserisci un numero valido",
 
     "13": "Hai inserito troppe volte un input non ammesso",
+    "14": "Account non valido",
+    "15": "Errore nello sblocco dell'account",
     "99": "Errore grave nel sistema"
 }]
