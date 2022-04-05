@@ -1,9 +1,6 @@
-#from hexbytes import HexBytes
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
-#from menu import tipo_utente, bcolors
 from variabili import *
-from funzioni import gestione_errori
 
 
 class blockchain:
@@ -19,7 +16,6 @@ class blockchain:
             abi = file.read()
 
         self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)
-
 
 
     def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
@@ -107,8 +103,7 @@ class blockchain:
                 ultimo_nft_lotto = True
                 if (i != num_token): # L'ultimo NFT per id è ovviamente l'ultimo relativo a qualunque lotto
                     for c in range(0, len(token_posseduti)):   # itera sui token salvati in lista
-                        #if (dati_nft[0] == token_posseduti[c]['id_lotto']):
-                        if (info_nft['id_lotto'] == token_posseduti[c]['id_lotto']):
+                        if (dati_nft[0] == token_posseduti[c]['id_lotto']):
                             ultimo_nft_lotto = False    # Se il lotto è già in lista, non è l'ultimo NFT
                             break
 
@@ -127,6 +122,7 @@ class blockchain:
                             da_rimuovere = token_posseduti[c]
                             token_posseduti.remove(da_rimuovere)
                             # Lo elimino dalla lista
+
         return token_posseduti
 
 

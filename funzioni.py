@@ -1,11 +1,9 @@
 from eth_account import Account
-#from menu import *
 import secrets
 from texttable import Texttable
 import json, codecs
 from variabili import *
 
-debug = True
 
 errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
 errori = errori[0]
@@ -61,8 +59,9 @@ def stato_admin_home(bch, stato):
 def stato_aggiungi_agenti(bch):
 
     # Inserisce un nuovo agente
-    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(bch.tipo) + ", " +
-              bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo automaticamente, " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=42)
+    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(bch.tipo) + ", "
+                                  + bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo automaticamente, "
+                                  + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=42)
 
     if (address != "q"):    # l'admin intende inserire l'account
 
@@ -141,14 +140,12 @@ def stato_trasformatore_home(bch, stato):
 
 
 def stato_crea_nft_fornitore(bch):
-    #TODO gestire lettere possibili di ingresso a id_lotto e C02
-    id_lotto = input_val(
-        messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
-        max_len=20)
+    id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q"
+                                   + bcolors.ENDC + " per annullare ", max_len=20 , tipo="cifre")
     if (id_lotto == "q"):
         pass
     else:
-        CO2 = int(input_val(messaggio="Inserisci il totale di CO2 emessa in grammi: ", max_len=10))
+        CO2 = int(input_val(messaggio="Inserisci il totale di CO2 emessa in grammi: ", max_len=10, tipo="cifre"))
         bch.crea_nft_fornitore(int(id_lotto), CO2)
         print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
 
@@ -156,7 +153,8 @@ def stato_crea_nft_fornitore(bch):
 
 
 def stato_lista_nft(bch):
-    mostra_tutti = input_val(messaggio="Vuoi mostrare anche gli nft non più utilizzabili?: s/n ", max_len=1,arg=("s","n"))
+    mostra_tutti = input_val(messaggio="Vuoi mostrare anche gli nft non più utilizzabili?: s/n ",
+                             max_len=1, arg=("s","n"))
     if (mostra_tutti in {"s", "n"}):
         all = (mostra_tutti == "s")
         my_nft = bch.lista_nft(mostra_tutti=all)
@@ -171,11 +169,10 @@ def stato_trasferisci_nft(bch):
     stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(id_utente["trasformatore"], False))
     if bch.tipo == id_utente["trasformatore"]: #i trasformatori possono trasferire anche ai clienti
         stampa_tabella(["Elenco clienti esistenti"], bch.ricerca_agenti(id_utente["cliente"], False))
-    destinatario = input_val(
-        messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
-        max_len=43)
+    destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q"
+                                       + bcolors.ENDC + " per annullare ", max_len=43)
     if (destinatario != "q"):
-        id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20)
+        id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
         bch.trasferisci_nft(destinatario, int(id_lotto))
         print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
     if(bch.tipo == id_utente["fornitore"]):
@@ -187,12 +184,11 @@ def stato_trasferisci_nft(bch):
 
 
 def stato_aggiungi_azione(bch,stato):
-    azione = input_val(
-        messaggio="Inserisci l'azione da aggiungere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
-        max_len=30)
+    azione = input_val(messaggio="Inserisci l'azione da aggiungere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
+                                 + " per annullare ", max_len=30)
     if (azione != "q"):
-        id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20))
-        CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10))
+        id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20, tipo="cifre"))
+        CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10, tipo="cifre"))
         bch.aggiungi_azione(azione, id_lotto, CO2)
         print(bcolors.OKGREEN + "Azione sul lotto numero", id_lotto, "aggiunta con successo" + bcolors.ENDC)
 
@@ -200,9 +196,8 @@ def stato_aggiungi_azione(bch,stato):
 
 
 def stato_crea_nft_trasformatore(bch):
-    id_lotto = input_val(
-        messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
-        max_len=20)
+    id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q"
+                                   + bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre")
     if (id_lotto != "q"):
         bch.crea_nft_trasformatore(int(id_lotto))
         print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
@@ -211,7 +206,6 @@ def stato_crea_nft_trasformatore(bch):
 
 
 def stato_cliente_home(bch, stato):
-    print(bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. cliente" + bcolors.ENDC + bcolors.ENDC)
     stampa_menu(stato)
     input = input_val(max_len=1, arg=menu[stato].keys())
 
@@ -226,9 +220,8 @@ def stato_cliente_home(bch, stato):
 
 
 def stato_lettura_nft(bch,stato):
-    id_nft = input_val(
-        messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
-        max_len=10)
+    id_nft = input_val(messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
+                                 + " per annullare ", max_len=10, tipo="cifre")
     if id_nft != "q":
         titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
         stampa_tabella(titolo, dati)
@@ -236,9 +229,8 @@ def stato_lettura_nft(bch,stato):
 
 
 def stato_lettura_lotto(bch,stato):
-    id_lotto = input_val(
-        messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ",
-        max_len=10)
+    id_lotto = input_val(messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
+                  + " per annullare ", max_len=10, tipo="cifre")
     if id_lotto != "q":
         titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
         if titolo[0] == "Lotto Inesistente":
@@ -316,7 +308,7 @@ def login(bch):
 def gestione_errori(errore,bch,stato):
     try:
         errore = str(errore)
-        if (debug):
+        if debug:
             print("Errore originale: ", errore)
         e = int(errore[(len(errore) - 2):])
         if str(e) in errori:

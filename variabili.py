@@ -8,6 +8,7 @@ admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6" #Indirizzo admin
 
 null_address = "0x0000000000000000000000000000000000000000"
 
+debug = True
 
 class bcolors:
     HEADER = '\033[95m'
