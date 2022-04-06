@@ -144,7 +144,7 @@ def stato_trasformatore_home(bch, stato):
 
 def stato_crea_nft_fornitore(bch):
     id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q"
-                                   + bcolors.ENDC + " per annullare ", max_len=20 , tipo="cifre")
+                                   + bcolors.ENDC + " per annullare ", max_len=20 , tipo="cifre_q")
     if (id_lotto == "q"):
         pass
     else:
@@ -200,7 +200,7 @@ def stato_aggiungi_azione(bch,stato):
 
 def stato_crea_nft_trasformatore(bch):
     id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q"
-                                   + bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre")
+                                   + bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre_q")
     if (id_lotto != "q"):
         bch.crea_nft_trasformatore(int(id_lotto))
         print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
@@ -224,7 +224,7 @@ def stato_cliente_home(bch, stato):
 
 def stato_lettura_nft(bch,stato):
     id_nft = input_val(messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
-                                 + " per annullare ", max_len=10, tipo="cifre")
+                                 + " per annullare ", max_len=10, tipo="cifre_q")
     if id_nft != "q":
         titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))
         stampa_tabella(titolo, dati)
@@ -233,7 +233,7 @@ def stato_lettura_nft(bch,stato):
 
 def stato_lettura_lotto(bch,stato):
     id_lotto = input_val(messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
-                  + " per annullare ", max_len=10, tipo="cifre")
+                  + " per annullare ", max_len=10, tipo="cifre_q")
     if id_lotto != "q":
         titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))
         if titolo[0] == "Lotto Inesistente":
@@ -247,7 +247,7 @@ def stato_lettura_lotto(bch,stato):
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
 def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None, bch=None):
-    # tipo = None (tutto ammesso), "cifre" (solo cifre o "q")
+    # tipo = None (tutto ammesso), "cifre" (solo cifre), "cifre_q" (solo cifre o "q")
     validated = False   # Input non ancora validato
 
     while not validated:
@@ -273,7 +273,10 @@ def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None
         elif arg and not in_str in arg:
             pass    # L'input non è compreso nella lista ammessa
 
-        elif tipo == "cifre" and not (in_str.isdigit() or in_str == "q"):
+        elif tipo == "cifre_q" and not (in_str.isdigit() or in_str == "q"):
+            pass    # È richiesta una cifra o una q ma non è soddisfatta
+
+        elif tipo == "cifre" and not in_str.isdigit():
             pass    # È richiesta una cifra o una q ma non è soddisfatta
 
         else:   # Se i controlli sono passati, l'input è validato
