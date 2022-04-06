@@ -38,11 +38,8 @@ class blockchain:
 
     def aggiunta_agenti(self):  # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
-        if Web3.isAddress(self.address) and Web3.isChecksumAddress(self.address):
-            tx_hash = self.c_instance.functions.aggiungi_agenti(self.tipo, self.address).transact()
-            tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash) # TODO è inutile?
-        else:
-            raise Exception("14")
+        tx_hash = self.c_instance.functions.aggiungi_agenti(self.tipo, self.address).transact()
+
 
 
     # Funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
@@ -152,3 +149,7 @@ class blockchain:
             return self.lettura_impronta_da_nft(id_nft)
         else:
             return ["Lotto Inesistente"],[]
+
+    def indirizzo_valido(self, address):
+        if not (self.w3.isAddress(address) and self.w3.isChecksumAddress(address)):
+            raise Exception("14")

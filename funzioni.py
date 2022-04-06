@@ -76,6 +76,7 @@ def stato_aggiungi_agenti(bch):
 
         # Scelta password di sblocco
         password = richiedi_password()
+        bch.indirizzo_valido(address)
         bch.address = address
         # Aggiunta account nella blockchain
         bch.aggiunta_agenti()
@@ -173,12 +174,11 @@ def stato_trasferisci_nft(bch):
     destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q"
                                        + bcolors.ENDC + " per annullare ", max_len=43)
     if (destinatario != "q"):
-        if Web3.isAddress(destinatario) and Web3.isChecksumAddress(destinatario): #controllo validità account destinatario
-            id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
-            bch.trasferisci_nft(destinatario, int(id_lotto))
-            print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
-        else:
-            raise Exception("14")
+        bch.indirizzo_valido(destinatario)
+        print(destinatario)
+        id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
+        bch.trasferisci_nft(destinatario, int(id_lotto))
+        print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
     if(bch.tipo == id_utente["fornitore"]):
         return stati["fornitore"]
     elif (bch.tipo == id_utente["trasformatore"]):
@@ -291,13 +291,12 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
 def login(bch):
     lista_agenti_tipo = bch.ricerca_agenti(bch.tipo, True)
     stampa_tabella(["Elenco indirizzi esistenti"], lista_agenti_tipo)
-
-    print("Inserisci indirizzo portafoglio", tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire")
-    address = input_val(max_len = 42)
+    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire",max_len = 42)
 
     if (address == "q"):    # logout
         return False
     else:
+        bch.indirizzo_valido(address)  # controlla validità indirizzo
         bch.address = address
         if address in lista_agenti_tipo:
             if not bch.account_sbloccato():
