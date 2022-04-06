@@ -151,5 +151,7 @@ class blockchain:
             return ["Lotto Inesistente"],[]
 
     def indirizzo_valido(self, address):
-        if not (self.w3.isAddress(address) and self.w3.isChecksumAddress(address)):
-            raise Exception("14")
+        if self.w3.isAddress(address) and self.w3.isChecksumAddress(address):
+            return True
+        else:
+            return False

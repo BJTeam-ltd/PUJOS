@@ -1,10 +1,11 @@
-from eth_account import Account
+import codecs
+import json
 import secrets
-from texttable import Texttable
-import json, codecs
-from variabili import *
-from web3 import Web3
 
+from eth_account import Account
+from texttable import Texttable
+
+from variabili import *
 
 errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
 errori = errori[0]
@@ -62,7 +63,7 @@ def stato_aggiungi_agenti(bch):
     # Inserisce un nuovo agente
     address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(bch.tipo) + ", "
                                   + bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo automaticamente, "
-                                  + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=42)
+                                  + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=42,arg = ("c", "q"),tipo="address", bch=bch)
 
     if (address != "q"):    # l'admin intende inserire l'account
 
@@ -76,7 +77,6 @@ def stato_aggiungi_agenti(bch):
 
         # Scelta password di sblocco
         password = richiedi_password()
-        bch.indirizzo_valido(address)
         bch.address = address
         # Aggiunta account nella blockchain
         bch.aggiunta_agenti()
@@ -172,9 +172,8 @@ def stato_trasferisci_nft(bch):
     if bch.tipo == id_utente["trasformatore"]: #i trasformatori possono trasferire anche ai clienti
         stampa_tabella(["Elenco clienti esistenti"], bch.ricerca_agenti(id_utente["cliente"], False))
     destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q"
-                                       + bcolors.ENDC + " per annullare ", max_len=43)
+                                       + bcolors.ENDC + " per annullare ", max_len=43, arg=("q"), bch=bch)
     if (destinatario != "q"):
-        bch.indirizzo_valido(destinatario)
         print(destinatario)
         id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
         bch.trasferisci_nft(destinatario, int(id_lotto))
@@ -247,7 +246,7 @@ def stato_lettura_lotto(bch,stato):
 # Validazione input
 # Controlla la lunghezza e restituisce la stringa validata
 # Di default chiede l'input 5 volte e la lunghezza massima è 66 (quella della private key)
-def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None):
+def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None, bch=None):
     # tipo = None (tutto ammesso), "cifre" (solo cifre o "q")
     validated = False   # Input non ancora validato
 
@@ -264,6 +263,12 @@ def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None
         elif len(in_str) > max_len:
             # L'input supera la lunghezza massima
             avviso = "Input troppo lungo, riprova:"
+
+        elif tipo == "address" and not in_str in arg:
+            if not bch.indirizzo_valido(in_str):
+                avviso = "Indirizzo non valido, riprova: "
+            else:
+                return in_str
 
         elif arg and not in_str in arg:
             pass    # L'input non è compreso nella lista ammessa
@@ -291,12 +296,11 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
 def login(bch):
     lista_agenti_tipo = bch.ricerca_agenti(bch.tipo, True)
     stampa_tabella(["Elenco indirizzi esistenti"], lista_agenti_tipo)
-    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire",max_len = 42)
+    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire",max_len = 42,tipo = "address", arg=("q"), bch=bch)
 
     if (address == "q"):    # logout
         return False
     else:
-        bch.indirizzo_valido(address)  # controlla validità indirizzo
         bch.address = address
         if address in lista_agenti_tipo:
             if not bch.account_sbloccato():
@@ -323,7 +327,7 @@ def gestione_errori(errore,bch,stato):
             exit()
         if str(e) == "13":
             if (bch.blocco_account()):
-                print("Logout eseguito")
+                print(bcolors.FAIL + "Logout eseguito" + bcolors.ENDC)
             return stati["home"]
         else:
             return stato
