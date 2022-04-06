@@ -78,12 +78,13 @@ def stato_aggiungi_agenti(bch):
         # Scelta password di sblocco
         password = richiedi_password()
         bch.address = address
-        # Aggiunta account nella blockchain
-        bch.aggiunta_agenti()
-        print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(bch.tipo)) + " riuscita" + bcolors.ENDC)
         # Inserimento account nel nodo corrente
         bch.inserimento_account(private_key, password)
         print(bcolors.OKGREEN + "Indirizzo inserito nel nodo corrente" + bcolors.ENDC)
+        # Aggiunta account nella blockchain
+        bch.aggiunta_agenti()
+        print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(bch.tipo)) + " riuscita" + bcolors.ENDC)
+
 
     else:
         bch.tipo = 0
@@ -255,18 +256,18 @@ def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None
         print("", end = messaggio)  # Stampa un eventuale messaggio passato come parametro
         in_str = input()    # Lettura input e conteggio tentativo
         max_retry -= 1
-        avviso = "Caratteri non ammessi, riprova:"
+        avviso = errori["100"] #"Caratteri non ammessi, riprova:"
 
         if not in_str.isalnum():
             pass    # Sono presenti caratteri speciali
 
         elif len(in_str) > max_len:
             # L'input supera la lunghezza massima
-            avviso = "Input troppo lungo, riprova:"
+            avviso = errori["101"] #"Input troppo lungo, riprova:"
 
         elif tipo == "address" and not in_str in arg:
             if not bch.indirizzo_valido(in_str):
-                avviso = "Indirizzo non valido, riprova: "
+                avviso = errori["102"] #"Indirizzo non valido, riprova: "
             else:
                 return in_str
 

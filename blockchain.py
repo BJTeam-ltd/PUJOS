@@ -33,7 +33,10 @@ class blockchain:
 
     def inserimento_account(self, priv_key, password):
         # inserisce l'account nella lista del nodo della blockchain con una nuova password
-        self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
+        try:
+            self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
+        except:
+            raise Exception("16")
 
 
     def aggiunta_agenti(self):  # funzione che inserisce "address" alla blockchain

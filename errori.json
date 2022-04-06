@@ -15,5 +15,11 @@
     "13": "Hai inserito troppe volte un input non ammesso",
     "14": "Account non valido",
     "15": "Errore nello sblocco dell'account",
-    "99": "Errore grave nel sistema"
+    "16": "Errore nell'inserimento dell'account nel nodo",
+    "99": "Errore grave nel sistema",
+
+
+    "100": "Caratteri non ammessi, riprova:",
+    "101": "Input troppo lungo, riprova:",
+    "102": "Indirizzo non valido, riprova: "
 }]
