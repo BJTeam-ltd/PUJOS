@@ -173,9 +173,8 @@ def stato_trasferisci_nft(bch):
     if bch.tipo == id_utente["trasformatore"]: #i trasformatori possono trasferire anche ai clienti
         stampa_tabella(["Elenco clienti esistenti"], bch.ricerca_agenti(id_utente["cliente"], False))
     destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q"
-                                       + bcolors.ENDC + " per annullare ", max_len=43, arg=("q"), bch=bch)
+                                       + bcolors.ENDC + " per annullare ", max_len=43, tipo="address", arg=("q"), bch=bch)
     if (destinatario != "q"):
-        print(destinatario)
         id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
         bch.trasferisci_nft(destinatario, int(id_lotto))
         print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
@@ -256,14 +255,14 @@ def input_val(max_len = 66, max_retry = 5, messaggio = "", arg = (), tipo = None
         print("", end = messaggio)  # Stampa un eventuale messaggio passato come parametro
         in_str = input()    # Lettura input e conteggio tentativo
         max_retry -= 1
-        avviso = errori["100"] #"Caratteri non ammessi, riprova:"
+        avviso = errori["100"] #"Caratteri non ammessi, riprova: "
 
         if not in_str.isalnum():
             pass    # Sono presenti caratteri speciali
 
         elif len(in_str) > max_len:
             # L'input supera la lunghezza massima
-            avviso = errori["101"] #"Input troppo lungo, riprova:"
+            avviso = errori["101"] #"Input troppo lungo, riprova: "
 
         elif tipo == "address" and not in_str in arg:
             if not bch.indirizzo_valido(in_str):
@@ -297,7 +296,7 @@ def richiedi_password():        # Chiede di scegliere una password, se non inser
 def login(bch):
     lista_agenti_tipo = bch.ricerca_agenti(bch.tipo, True)
     stampa_tabella(["Elenco indirizzi esistenti"], lista_agenti_tipo)
-    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire",max_len = 42,tipo = "address", arg=("q"), bch=bch)
+    address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire ",max_len = 42,tipo = "address", arg=("q"), bch=bch)
 
     if (address == "q"):    # logout
         return False
