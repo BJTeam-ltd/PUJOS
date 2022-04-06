@@ -3,6 +3,7 @@ import secrets
 from texttable import Texttable
 import json, codecs
 from variabili import *
+from web3 import Web3
 
 
 errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
@@ -36,7 +37,7 @@ def stato_home(bch, stato):
 
 # Funzione operazioni admin
 def stato_admin_home(bch, stato):
-    print(bcolors.BOLD + bcolors.HEADER + "    Benvenuto Amministratore" + bcolors.ENDC + bcolors.ENDC)
+    print(bcolors.BOLD + bcolors.HEADER + "Benvenuto Amministratore" + bcolors.ENDC + bcolors.ENDC)
     stampa_menu(stato)        # mostra il menu dell'amministratore
     input = input_val(max_len = 1, arg = menu[stato].keys())
 
@@ -90,7 +91,7 @@ def stato_aggiungi_agenti(bch):
 
 
 def stato_login(bch):
-    print("\n", bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. " + tipo_utente[bch.tipo] + " " + bcolors.ENDC + bcolors.ENDC)
+    print("\n"+bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. " + tipo_utente[bch.tipo] + " " + bcolors.ENDC + bcolors.ENDC)
     address = login(bch)  # funzione per sblocco account
     if address:
         bch.address = address
@@ -106,7 +107,7 @@ def stato_fornitore_home(bch, stato):
 
     if input == "q":
         if (bch.blocco_account()):
-            print("Logout eseguito")
+            print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
         return stati["home"]
     elif input == "1":
         return stati["crea_nft_fornitore"]
@@ -125,7 +126,7 @@ def stato_trasformatore_home(bch, stato):
 
     if input == "q":
         if (bch.blocco_account()):
-            print("Logout eseguito")
+            print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
         return stati["home"]
     elif input == "1":
         return stati["aggiungi_azione"]
@@ -172,9 +173,12 @@ def stato_trasferisci_nft(bch):
     destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q"
                                        + bcolors.ENDC + " per annullare ", max_len=43)
     if (destinatario != "q"):
-        id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
-        bch.trasferisci_nft(destinatario, int(id_lotto))
-        print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
+        if Web3.isAddress(destinatario) and Web3.isChecksumAddress(destinatario): #controllo validità account destinatario
+            id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
+            bch.trasferisci_nft(destinatario, int(id_lotto))
+            print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario, "riuscito" + bcolors.ENDC)
+        else:
+            raise Exception("14")
     if(bch.tipo == id_utente["fornitore"]):
         return stati["fornitore"]
     elif (bch.tipo == id_utente["trasformatore"]):
@@ -211,7 +215,7 @@ def stato_cliente_home(bch, stato):
 
     if input == "q":
         if (bch.blocco_account()):
-            print("Logout eseguito")
+            print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
         return stati["home"]
     elif input == "1":
         return stati["stato_lettura_nft"]
