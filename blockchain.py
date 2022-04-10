@@ -73,7 +73,6 @@ class blockchain:
     def sblocco_account(self, password):
         try:
             self.w3.geth.personal.unlock_account(account = self.address, passphrase = password, duration = 1200)
-            return True
         except:
             raise Exception("15")
 

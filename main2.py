@@ -5,9 +5,7 @@ from funzioni import *
 
 
 bch = blockchain()
-
 stato = stati["home"]
-vecchio_stato = stati["home"]
 
 if __name__ == "__main__":
     try:
