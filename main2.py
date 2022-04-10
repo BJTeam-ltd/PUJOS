@@ -106,7 +106,7 @@ if __name__ == "__main__":
 
             elif stato == stati["exit"]:
                 if (bch.blocco_account()):
-                    print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC))
+                    print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
                 exit("Arrivederci!!")
 
     except KeyboardInterrupt:
