@@ -106,14 +106,14 @@ if __name__ == "__main__":
 
             elif stato == stati["exit"]:
                 if (bch.blocco_account()):
-                    print("Logout eseguito")
+                    print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC))
                 exit("Arrivederci!!")
 
     except KeyboardInterrupt:
         # se viene interrotta l'esecuzione
         try:
             if (bch.blocco_account()):
-                print("Logout eseguito")
+                print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
         except:
             print("Errore nella chiusura programma")
         exit("Arrivederci!!")
