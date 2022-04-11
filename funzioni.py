@@ -156,8 +156,14 @@ def stato_crea_nft_fornitore(bch):
 
 
 def stato_lista_nft(bch):
-    mostra_tutti = input_val(messaggio="Vuoi mostrare anche gli nft non più utilizzabili?: s/n ",
+
+    # Solo il trasformatore può avere NFT non più utili, poiché trasferiti o elaborati
+    if bch.tipo == id_utente["trasformatore"]:
+        mostra_tutti = input_val(messaggio="Vuoi mostrare anche gli nft non più utilizzabili?: s/n ",
                              max_len=1, arg=("s","n"))
+    else:
+        mostra_tutti = "s"  # Fisso il parametro per gli altri
+
     if (mostra_tutti in {"s", "n"}):
         all = (mostra_tutti == "s")
         my_nft = bch.lista_nft(mostra_tutti=all)
