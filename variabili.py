@@ -1,14 +1,14 @@
-
 node_url = 'http://blockchain.g-ws.it:110'
-#node_url = 'http://blockchain.g-ws.it:1100' #Daniele
+# node_url = 'http://blockchain.g-ws.it:1100' # Daniele
 
-contract_address = "0xBca0fDc68d9b21b5bfB16D784389807017B2bbbc" #Indirizzo smart contract quando caricato
+contract_address = "0xBca0fDc68d9b21b5bfB16D784389807017B2bbbc"  # Indirizzo smart contract quando caricato
 
-admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6" #Indirizzo admin
+admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6"  # Indirizzo admin
 
 null_address = "0x0000000000000000000000000000000000000000"
 
 debug = True
+
 
 class bcolors:
     HEADER = '\033[95m'
@@ -23,84 +23,84 @@ class bcolors:
 
 
 stati = {
-    "exit" : -100,
-    "home" : -1,
-    "admin" : 0,
-    "aggiungi_agenti" : 1,
+    "exit": -100,
+    "home": -1,
+    "admin": 0,
+    "aggiungi_agenti": 1,
 
-    "login" : 10,
-    "fornitore" : 11,
+    "login": 10,
+    "fornitore": 11,
     "trasformatore": 12,
-    "cliente" : 13,
-    "crea_nft_fornitore" : 14,
-    "lista_nft" : 15,
-    "trasferisci_nft" : 16,
-    "aggiungi_azione" : 17,
+    "cliente": 13,
+    "crea_nft_fornitore": 14,
+    "lista_nft": 15,
+    "trasferisci_nft": 16,
+    "aggiungi_azione": 17,
     "crea_nft_trasformatore": 18,
-    "stato_lettura_nft" : 30,
-    "stato_lettura_lotto" : 31
+    "stato_lettura_nft": 30,
+    "stato_lettura_lotto": 31
 }
 
-tipo_utente={
-    0 : "admin",
-    1 : "fornitore",
-    2 : "trasformatore",
-    3 : "cliente"
+tipo_utente = {
+    0: "admin",
+    1: "fornitore",
+    2: "trasformatore",
+    3: "cliente"
 }
 
-id_utente={
-    "admin" : 0,
-    "fornitore" : 1,
-    "trasformatore" : 2,
-    "cliente" : 3
+id_utente = {
+    "admin": 0,
+    "fornitore": 1,
+    "trasformatore": 2,
+    "cliente": 3
 }
 
 comandi_menu_home = {
-    "titolo" : "Chi sei?:",
-    "0" : "Admin",
-    "1" : "Fornitore",
-    "2" : "Trasformatore",
-    "3" : "Cliente",
-    "q" : "Termina esecuzione"
+    "titolo": "Chi sei?:",
+    "0": "Admin",
+    "1": "Fornitore",
+    "2": "Trasformatore",
+    "3": "Cliente",
+    "q": "Termina esecuzione"
 }
 
 comandi_menu_admin = {
-    "titolo" : "Admin:",
-    "1" : "Aggiungi Fornitore",
-    "2" : "Aggiungi Trasformatore",
-    "3" : "Aggiungi Cliente",
-    "b" : "Elenco indirizzi",
-    "q" : "Logout"
+    "titolo": "Admin:",
+    "1": "Aggiungi Fornitore",
+    "2": "Aggiungi Trasformatore",
+    "3": "Aggiungi Cliente",
+    "b": "Elenco indirizzi",
+    "q": "Logout"
 }
 
 comandi_menu_fornitore = {
-    "titolo" : "Fornitore:",
-    "1" : "Crea il tuo NFT",
-    "2" : "I tuoi NFT",
-    "3" : "Trasferisci NFT ad un trasformatore",
-    "q" : "Logout"
+    "titolo": "Fornitore:",
+    "1": "Crea il tuo NFT",
+    "2": "I tuoi NFT",
+    "3": "Trasferisci NFT ad un trasformatore",
+    "q": "Logout"
 }
 
 comandi_menu_trasformatore = {
-    "titolo" : "Trasformatore:",
-    "1" : "Aggiungi un nuovo contributo di CO2 ad uno dei tuoi lotti",
-    "2" : "Crea il tuo NFT",
-    "3" : "I tuoi NFT",
-    "4" : "Trasferisci NFT ad un trasformatore o cliente",
-    "q" : "Logout"
+    "titolo": "Trasformatore:",
+    "1": "Aggiungi un nuovo contributo di CO2 ad uno dei tuoi lotti",
+    "2": "Crea il tuo NFT",
+    "3": "I tuoi NFT",
+    "4": "Trasferisci NFT ad un trasformatore o cliente",
+    "q": "Logout"
 }
 
 comandi_menu_cliente = {
-    "titolo" : "Cliente:",
-    "1" : "Lettura impronta tramite id NFT",
-    "2" : "Lettura impronta tramite id lotto",
-    "q" : "Logout"
+    "titolo": "Cliente:",
+    "1": "Lettura impronta tramite id NFT",
+    "2": "Lettura impronta tramite id lotto",
+    "q": "Logout"
 }
 
 menu = {
-    -1 : comandi_menu_home,
-    0 :  comandi_menu_admin,
-    11 : comandi_menu_fornitore,
-    12 : comandi_menu_trasformatore,
-    13 : comandi_menu_cliente,
+    -1: comandi_menu_home,
+    0: comandi_menu_admin,
+    11: comandi_menu_fornitore,
+    12: comandi_menu_trasformatore,
+    13: comandi_menu_cliente,
 }
