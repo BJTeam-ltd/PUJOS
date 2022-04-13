@@ -1,5 +1,7 @@
 #node_url = 'http://blockchain.g-ws.it:110'
-node_url = 'http://blockchain.g-ws.it:1100'
+#node_url = 'http://blockchain.g-ws.it:1100'
+node_url = 'https://blockchain.g-ws.it'
+
 
 contract_address = "0xBca0fDc68d9b21b5bfB16D784389807017B2bbbc"  # Indirizzo smart contract quando caricato
 
