@@ -8,7 +8,7 @@ stato = stati["home"]  # Si imposta lo stato iniziale a "home"
 if __name__ == "__main__":
     try:
         # Stampe inziali, Benvenuto e controllo connessione blockchain
-        print(bcolors.HEADER + "Benvenuto nella Dapp" + bcolors.ENDC)
+        print(Bcolors.HEADER + "Benvenuto nella Dapp" + Bcolors.ENDC)
 
         # Tentativo di Connessione al nodo Blockchain, se l'esito è negativo termina l'esecuzione del programma
         if bch.connessione():
@@ -105,14 +105,14 @@ if __name__ == "__main__":
 
             elif stato == stati["exit"]:
                 if bch.blocco_account():
-                    print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
+                    print(Bcolors.OKCYAN + "Logout eseguito" + Bcolors.ENDC)
                 exit("Arrivederci!!")
 
     except KeyboardInterrupt:
         # se viene interrotta l'esecuzione
         try:
             if bch.blocco_account():
-                print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
+                print(Bcolors.OKCYAN + "Logout eseguito" + Bcolors.ENDC)
         except:
             print("Errore nella chiusura programma")
         exit("Arrivederci!!")

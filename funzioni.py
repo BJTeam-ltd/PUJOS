@@ -11,16 +11,17 @@ from variabili import *
 errori = json.load(codecs.open('errori.json', 'r', 'utf-8-sig'))
 errori = errori[0]
 
+
 # STATO HOME
 def stato_home(bch, stato):
     stampa_menu(stato)  # stampa il menu dello stato home
-    bch.address = ""    # inizializza l'address ed il tipo di utente ogni volta che si torna allo stato home
+    bch.address = ""  # inizializza l'address ed il tipo di utente ogni volta che si torna allo stato home
     bch.tipo = 0
     # richiede l'input dell'utente, specificando la lunghezza massima(1) e i caratteri accettati
     utente = input_val(max_len=1, arg=menu[stato].keys())
 
     if utente == "0":
-        bch.tipo = 0           # imposta il tipo di utente
+        bch.tipo = 0  # imposta il tipo di utente
         return stati["admin"]  # imposta lo stato di destinazione
     elif utente == "1":
         bch.tipo = 1
@@ -42,7 +43,7 @@ def stato_home(bch, stato):
 
 # STATO ADMIN HOME
 def stato_admin_home(bch, stato):
-    print(bcolors.BOLD + bcolors.HEADER + "Benvenuto Amministratore" + bcolors.ENDC + bcolors.ENDC)
+    print(Bcolors.BOLD + Bcolors.HEADER + "Benvenuto Amministratore" + Bcolors.ENDC + Bcolors.ENDC)
     stampa_menu(stato)  # mostra il menu dell'amministratore
     key = input_val(max_len=1, arg=menu[stato].keys())
 
@@ -63,12 +64,13 @@ def stato_admin_home(bch, stato):
         bch.tipo = 0
         return stati["home"]
 
+
 # STATO AGGIUNTA AGENTI
 def stato_aggiungi_agenti(bch):
     # Inserisce un nuovo agente
     address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(bch.tipo) + ", "
-                                  + bcolors.WARNING + "c" + bcolors.ENDC + " per generarlo automaticamente, "
-                                  + bcolors.OKCYAN + "q" + bcolors.ENDC + " per annullare ", max_len=42, arg=("c", "q"),
+                                  + Bcolors.WARNING + "c" + Bcolors.ENDC + " per generarlo automaticamente, "
+                                  + Bcolors.OKCYAN + "q" + Bcolors.ENDC + " per annullare ", max_len=42, arg=("c", "q"),
                         tipo="address", bch=bch)
 
     if address != "q":  # l'admin intende inserire l'account
@@ -86,10 +88,10 @@ def stato_aggiungi_agenti(bch):
         bch.address = address
         # Inserimento account nel nodo corrente
         bch.inserimento_account(private_key, password)
-        print(bcolors.OKGREEN + "Indirizzo inserito nel nodo corrente" + bcolors.ENDC)
+        print(Bcolors.OKGREEN + "Indirizzo inserito nel nodo corrente" + Bcolors.ENDC)
         # Aggiunta account nella blockchain
         bch.aggiunta_agenti()
-        print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(bch.tipo)) + " riuscita" + bcolors.ENDC)
+        print(Bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(bch.tipo)) + " riuscita" + Bcolors.ENDC)
 
     else:
         bch.tipo = 0
@@ -99,8 +101,8 @@ def stato_aggiungi_agenti(bch):
 
 # STATO LOGIN
 def stato_login(bch):
-    print("\n" + bcolors.BOLD + bcolors.HEADER + "Buongiorno sig. " + tipo_utente[
-        bch.tipo] + " " + bcolors.ENDC + bcolors.ENDC)
+    print("\n" + Bcolors.BOLD + Bcolors.HEADER + "Buongiorno sig. " + tipo_utente[
+        bch.tipo] + " " + Bcolors.ENDC + Bcolors.ENDC)
     address = login(bch)  # funzione di sblocco dell'account nel nodo blockchain
     if address:
         bch.address = address
@@ -117,7 +119,7 @@ def stato_fornitore_home(bch, stato):
 
     if key == "q":
         if bch.blocco_account():
-            print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
+            print(Bcolors.OKCYAN + "Logout eseguito" + Bcolors.ENDC)
         return stati["home"]
     elif key == "1":
         return stati["crea_nft_fornitore"]
@@ -139,7 +141,7 @@ def stato_trasformatore_home(bch, stato):
 
     if key == "q":
         if bch.blocco_account():
-            print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
+            print(Bcolors.OKCYAN + "Logout eseguito" + Bcolors.ENDC)
         return stati["home"]
     elif key == "1":
         return stati["aggiungi_azione"]
@@ -154,18 +156,20 @@ def stato_trasformatore_home(bch, stato):
         # si provvede alla chiusura con notifica di errore "Errore grave nel sistema"
         exit(errori["99"])
 
+
 # STATO CREAZIONE NFT FORNITORE
 def stato_crea_nft_fornitore(bch):
-    id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q"
-                                   + bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre_q")
+    id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + Bcolors.OKCYAN + "q"
+                                   + Bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre_q")
     if id_lotto == "q":
         pass
     else:
         co2 = int(input_val(messaggio="Inserisci il totale di CO2 emessa in grammi: ", max_len=10, tipo="cifre"))
         bch.crea_nft_fornitore(int(id_lotto), co2)  # creazione dell'nft a partire dall'id lotto e dalla co2
-        print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
+        print(Bcolors.OKGREEN + "NFT creato con successo" + Bcolors.ENDC)
     # si ritorna stato "fornitore"
     return stati["fornitore"]
+
 
 # STATO LISTA NFT
 def stato_lista_nft(bch):
@@ -185,19 +189,20 @@ def stato_lista_nft(bch):
 
     return stati[tipo_utente[bch.tipo]]  # Torna allo stato dell'account loggato
 
+
 # STATO TRASFERISCI NFT
 def stato_trasferisci_nft(bch):
     stampa_tabella(["Elenco trasformatori esistenti"], bch.ricerca_agenti(id_utente["trasformatore"], False))
     if bch.tipo == id_utente["trasformatore"]:  # i trasformatori possono trasferire anche ai clienti
         stampa_tabella(["Elenco clienti esistenti"], bch.ricerca_agenti(id_utente["cliente"], False))
-    destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + bcolors.OKCYAN + "q"
-                                       + bcolors.ENDC + " per annullare ", max_len=43, tipo="address", arg="q",
+    destinatario = input_val(messaggio="Inserisci destinatario dell'NFT o " + Bcolors.OKCYAN + "q"
+                                       + Bcolors.ENDC + " per annullare ", max_len=43, tipo="address", arg="q",
                              bch=bch)
     if destinatario != "q":
         id_lotto = input_val(messaggio="Inserisci id lotto: ", max_len=20, tipo="cifre")
         bch.trasferisci_nft(destinatario, int(id_lotto))
-        print(bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario,
-              "riuscito" + bcolors.ENDC)
+        print(Bcolors.OKGREEN + "Trasferimento NFT del lotto", id_lotto, "verso", destinatario,
+              "riuscito" + Bcolors.ENDC)
     # si provvede a verificare il tipo di utente, quindi lo stato precedente
     if bch.tipo == id_utente["fornitore"]:
         # se lo stato di provenienza era un "fornitore", torno allo stato "fornitore"
@@ -210,28 +215,28 @@ def stato_trasferisci_nft(bch):
         exit(errori["99"])
 
 
-#STATO AGGIUNGI AZIONE
+# STATO AGGIUNGI AZIONE
 def stato_aggiungi_azione(bch):
-    azione = input_val(messaggio="Inserisci l'azione da aggiungere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
+    azione = input_val(messaggio="Inserisci l'azione da aggiungere o " + Bcolors.OKCYAN + "q" + Bcolors.ENDC
                                  + " per annullare ", max_len=30)
     if azione != "q":
         id_lotto = int(input_val(messaggio="Inserisci il lotto relativo al prodotto: ", max_len=20, tipo="cifre"))
         CO2 = int(input_val(messaggio="Inserisci CO2 emessa in grammi: ", max_len=10, tipo="cifre"))
-        bch.aggiungi_azione(azione, id_lotto, CO2) # funzione che aggiunge azioni effettuate dal trasformatore
-        print(bcolors.OKGREEN + "Azione sul lotto numero", id_lotto, "aggiunta con successo" + bcolors.ENDC)
-    #al termine si torna allo stato trasformatore
+        bch.aggiungi_azione(azione, id_lotto, CO2)  # funzione che aggiunge azioni effettuate dal trasformatore
+        print(Bcolors.OKGREEN + "Azione sul lotto numero", id_lotto, "aggiunta con successo" + Bcolors.ENDC)
+    # al termine si torna allo stato trasformatore
     return stati["trasformatore"]
 
 
-#STATO CREAZIONE NFT FORNITORE
+# STATO CREAZIONE NFT FORNITORE
 def stato_crea_nft_trasformatore(bch):
-    id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + bcolors.OKCYAN + "q"
-                                   + bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre_q")
+    id_lotto = input_val(messaggio="Inserisci il lotto relativo al prodotto o " + Bcolors.OKCYAN + "q"
+                                   + Bcolors.ENDC + " per annullare ", max_len=20, tipo="cifre_q")
     if id_lotto != "q":
         # funzione per la creazione dell'NFT a partire dall'NFT precedente e dalle azioni del trasformatore
         bch.crea_nft_trasformatore(int(id_lotto))
-        print(bcolors.OKGREEN + "NFT creato con successo" + bcolors.ENDC)
-    #al termine si torna allo stato trasformatore
+        print(Bcolors.OKGREEN + "NFT creato con successo" + Bcolors.ENDC)
+    # al termine si torna allo stato trasformatore
     return stati["trasformatore"]
 
 
@@ -243,7 +248,7 @@ def stato_cliente_home(bch, stato):
     if key == "q":
         # per uscire si esegue prima il logout e successivamente si ritorna lo stato "home"
         if bch.blocco_account():
-            print(bcolors.OKCYAN + "Logout eseguito" + bcolors.ENDC)
+            print(Bcolors.OKCYAN + "Logout eseguito" + Bcolors.ENDC)
         return stati["home"]
     elif key == "1":
         return stati["stato_lettura_nft"]
@@ -253,20 +258,20 @@ def stato_cliente_home(bch, stato):
 
 # STATO LETTURA NFT
 def stato_lettura_nft(bch):
-    id_nft = input_val(messaggio="Inserisci l'id NFT da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
+    id_nft = input_val(messaggio="Inserisci l'id NFT da leggere o " + Bcolors.OKCYAN + "q" + Bcolors.ENDC
                                  + " per annullare ", max_len=10, tipo="cifre_q")
     if id_nft != "q":
-        titolo, dati = bch.lettura_impronta_da_nft(int(id_nft)) # funzione che ricerca l'NFT a partire dall'ID
+        titolo, dati = bch.lettura_impronta_da_nft(int(id_nft))  # funzione che ricerca l'NFT a partire dall'ID
         stampa_tabella(titolo, dati)
     return stati["cliente"]
 
 
 # STATO LETTURA LOTTO
 def stato_lettura_lotto(bch):
-    id_lotto = input_val(messaggio="Inserisci l'id lotto da leggere o " + bcolors.OKCYAN + "q" + bcolors.ENDC
+    id_lotto = input_val(messaggio="Inserisci l'id lotto da leggere o " + Bcolors.OKCYAN + "q" + Bcolors.ENDC
                                    + " per annullare ", max_len=10, tipo="cifre_q")
     if id_lotto != "q":
-        titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto)) # funzione che ricerca l'NFT a partire dal lotto
+        titolo, dati = bch.lettura_impronta_da_lotto(int(id_lotto))  # funzione che ricerca l'NFT a partire dal lotto
         if titolo[0] == "Lotto Inesistente":
             print("Lotto inesistente")
         else:
@@ -314,7 +319,7 @@ def input_val(max_len=66, max_retry=5, messaggio="", arg=(), tipo=None, bch=None
             return in_str
 
         if max_retry > 0:
-            print(bcolors.WARNING + avviso + bcolors.ENDC)
+            print(Bcolors.WARNING + avviso + Bcolors.ENDC)
         else:
             # Tentativi terminati, errore
             raise Exception("13")
@@ -331,7 +336,7 @@ def login(bch):
     lista_agenti_tipo = bch.ricerca_agenti(bch.tipo, True)
     stampa_tabella(["Elenco indirizzi esistenti"], lista_agenti_tipo)
     address = input_val(messaggio="Inserisci indirizzo portafoglio " + tipo_utente.get(
-        int(bch.tipo)) + "," + bcolors.OKCYAN + " q" + bcolors.ENDC + " per uscire ", max_len=42, tipo="address",
+        int(bch.tipo)) + "," + Bcolors.OKCYAN + " q" + Bcolors.ENDC + " per uscire ", max_len=42, tipo="address",
                         arg="q", bch=bch)
 
     if address == "q":  # logout
@@ -342,9 +347,9 @@ def login(bch):
             if not bch.account_sbloccato():
                 password = richiedi_password()  # inserimento password account
                 bch.sblocco_account(password)
-                print(bcolors.OKCYAN + "Account sbloccato" + bcolors.ENDC)
+                print(Bcolors.OKCYAN + "Account sbloccato" + Bcolors.ENDC)
             else:
-                print(bcolors.OKCYAN + "Account già sbloccato" + bcolors.ENDC)
+                print(Bcolors.OKCYAN + "Account già sbloccato" + Bcolors.ENDC)
             return address  # se l'account era già sbloccato o è stato sbloccato
         else:
             raise Exception("14")
@@ -353,17 +358,17 @@ def login(bch):
 def gestione_errori(errore, bch, stato):  # funzione di gestione degli errori
     try:
         errore = str(errore)
-        if debug:           # se debug è impostato su True mostra l'errore originale del sistema
+        if debug:  # se debug è impostato su True mostra l'errore originale del sistema
             print("Errore originale: ", errore)
         e = int(errore[(len(errore) - 2):])
-        if str(e) in errori: # ricerca se il codice di errore è presente nell file "errori.json"
-            print(bcolors.WARNING + errori[str(e)] + bcolors.ENDC)
+        if str(e) in errori:  # ricerca se il codice di errore è presente nell file "errori.json"
+            print(Bcolors.WARNING + errori[str(e)] + Bcolors.ENDC)
         else:
             print("Errore")
             exit()
         if str(e) == "13":
             if bch.blocco_account():
-                print(bcolors.FAIL + "Logout eseguito" + bcolors.ENDC)
+                print(Bcolors.FAIL + "Logout eseguito" + Bcolors.ENDC)
             return stati["home"]
         else:
             return stato
@@ -372,10 +377,10 @@ def gestione_errori(errore, bch, stato):  # funzione di gestione degli errori
         exit(errori["99"])
 
 
-def genera_portafoglio():  #funzione che genera il portafoglio
-    priv = secrets.token_hex(32) # si genera una chiave privata
+def genera_portafoglio():  # funzione che genera il portafoglio
+    priv = secrets.token_hex(32)  # si genera una chiave privata
     private_key = "0x" + priv
-    acct = Account.from_key(private_key) # si genera la chave pubblica a partire da quella privata
+    acct = Account.from_key(private_key)  # si genera la chave pubblica a partire da quella privata
     return private_key, acct.address
 
 
@@ -405,8 +410,8 @@ def stampa_menu(stato):  # funzione che stampa il menu in base allo stato
             print(value)
         else:
             if key.isdigit():
-                color = bcolors.WARNING
+                color = Bcolors.WARNING
             else:
-                color = bcolors.OKCYAN
-            print(color + key + bcolors.ENDC + ' - ' + value)
+                color = Bcolors.OKCYAN
+            print(color + key + Bcolors.ENDC + ' - ' + value)
     print("************************")

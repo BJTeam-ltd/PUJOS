@@ -1,16 +1,16 @@
-node_url = 'http://blockchain.g-ws.it:110'
-# node_url = 'http://blockchain.g-ws.it:1100' # Daniele
+#node_url = 'http://blockchain.g-ws.it:110'
+node_url = 'http://blockchain.g-ws.it:1100'
 
 contract_address = "0xBca0fDc68d9b21b5bfB16D784389807017B2bbbc"  # Indirizzo smart contract quando caricato
 
-admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6"  # Indirizzo admin
+admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6"  # Indirizzo admin (account che ha eseguito il deploy)
 
 null_address = "0x0000000000000000000000000000000000000000"
 
 debug = True
 
 
-class bcolors:
+class Bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'
