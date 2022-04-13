@@ -235,6 +235,30 @@
 	{
 		"inputs": [
 			{
+				"internalType": "address",
+				"name": "_sender",
+				"type": "address"
+			},
+			{
+				"internalType": "uint256",
+				"name": "_id_lotto",
+				"type": "uint256"
+			}
+		],
+		"name": "controllo_lotto",
+		"outputs": [
+			{
+				"internalType": "uint256",
+				"name": "",
+				"type": "uint256"
+			}
+		],
+		"stateMutability": "view",
+		"type": "function"
+	},
+	{
+		"inputs": [
+			{
 				"internalType": "uint256",
 				"name": "",
 				"type": "uint256"
@@ -358,11 +382,6 @@
 		"inputs": [
 			{
 				"internalType": "uint256",
-				"name": "_old_nft_id",
-				"type": "uint256"
-			},
-			{
-				"internalType": "uint256",
 				"name": "_id_lotto",
 				"type": "uint256"
 			}
@@ -448,25 +467,6 @@
 		"name": "renounceOwnership",
 		"outputs": [],
 		"stateMutability": "nonpayable",
-		"type": "function"
-	},
-	{
-		"inputs": [
-			{
-				"internalType": "uint256",
-				"name": "_id_lotto",
-				"type": "uint256"
-			}
-		],
-		"name": "ricerca_lotto",
-		"outputs": [
-			{
-				"internalType": "uint256",
-				"name": "",
-				"type": "uint256"
-			}
-		],
-		"stateMutability": "view",
 		"type": "function"
 	},
 	{
@@ -647,7 +647,7 @@
 			},
 			{
 				"internalType": "uint256",
-				"name": "_nftId",
+				"name": "_id_lotto",
 				"type": "uint256"
 			}
 		],

@@ -1,168 +1,154 @@
-from hexbytes import HexBytes
 from web3 import Web3
 from web3.middleware import geth_poa_middleware
-from menu import tipo_utente, bcolors
-from address import *
+from variabili import *
 
 
-class blockchain:
+class Blockchain:
+    address = ""
+    tipo = 0
 
     def __init__(self):
-        self.w3 = Web3(Web3.HTTPProvider('http://blockchain.g-ws.it:110'))  # indirizzo nodo1
+        self.w3 = Web3(Web3.HTTPProvider(node_url))  # connessione al nodo
         self.w3.middleware_onion.inject(geth_poa_middleware, layer=0)
 
         with open('abi', 'r') as file:
-            abi = file.read()
+            abi = file.read()  # importa il file ABI
 
-        self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)
-
+        self.c_instance = self.w3.eth.contract(address=Web3.toChecksumAddress(contract_address), abi=abi)  # effettua la connessione al contratto
 
     def connessione(self):  # funzione che ritorna true se correttamente connessi all'account
         return self.w3.isConnected()
 
-
-    def account_sbloccato(self, account):  # funzione che verifica se l'account è già sbloccato
+    def account_sbloccato(self):  # funzione che verifica se l'account è già sbloccato
         lst = self.w3.geth.personal.list_wallets()  # funzione che ritorna la lista dei portafogli gestiti da geth
         for i in range(len(lst)):
-            if lst[i].accounts[0].address == account:
+            if lst[i].accounts[0].address == self.address:
                 if lst[i].status == "Unlocked":
-                    return True     # se l'account passato è già sbloccato ritorno true
+                    return True  # se l'account passato è già sbloccato ritorno true
         return False
 
-
     def inserimento_account(self, priv_key, password):
+        # inserisce l'account nella lista del nodo della blockchain con una nuova password
         try:
-            # inserisce l'account nella lista del nodo della blockchain con una nuova password
-            # self.w3.geth.personal.import_raw_key(private_key = priv_key, passphrase = password)
-            self.w3.parity.personal.importRawKey(priv_key, password) #TODO geth non funziona, parity sì
-            return True  # ritorna vero se l'inserimento è riuscito
+            self.w3.geth.personal.import_raw_key(private_key=priv_key, passphrase=password)
         except:
-            return False
+            raise Exception("16")
 
-
-    def aggiunta_agenti(self, tipo, address):  # funzione che inserisce "address" alla blockchain
+    def aggiunta_agenti(self):  # funzione che inserisce "address" alla blockchain
         self.w3.eth.defaultAccount = Web3.toChecksumAddress(admin_address)  # indirizzo account admin
-        try:
-            tx_hash = self.c_instance.functions.aggiungi_agenti(tipo, address).transact()
-            tx_receipt = self.w3.eth.waitForTransactionReceipt(tx_hash)
-            print(bcolors.OKGREEN + "Aggiunta account " + str(tipo_utente.get(tipo)) + " riuscita" + bcolors.ENDC)
-        except Exception as problema:
-            print(bcolors.FAIL + str(problema)+ bcolors.ENDC)
+        self.c_instance.functions.aggiungi_agenti(self.tipo, self.address).transact()
 
-
-    # Funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
-    def ricerca_agenti(self, tipo, address = None):
+    # funzione che ritorna gli indirizzi presenti nelle liste fornitori, trasformatori e clienti
+    def ricerca_agenti(self, tipo, stampa_tutto=False):
         agenti = []
         i = 1
 
-        while True:     # Itera su tutti gli agenti del tipo richiesto
+        while True:  # Itera su tutti gli agenti del tipo richiesto
             if tipo == 1:
                 tmp = self.c_instance.functions.fornitori(i).call()
             elif tipo == 2:
                 tmp = self.c_instance.functions.trasformatori(i).call()
             elif tipo == 3:
                 tmp = self.c_instance.functions.clienti(i).call()
+            else:
+                tmp = "0x0000000000000000000000000000000000000000"
 
             if "0x0000000000000000000000000000000000000000" == tmp:
-                break   # Ferma il loop quando arriva a fine mapping
+                break  # Ferma il loop quando arriva a fine mapping
             else:
-                if not tmp == address:  # Se richiesto, non stampa se stesso
+                if stampa_tutto:
+                    agenti.append(tmp)
+                elif not tmp == self.address:  # Se richiesto, non stampa se stesso
                     agenti.append(tmp)
                 i = i + 1
+
         return agenti
 
-
-    def sblocco_account(self, address, password):
+    #funzione che provvede a sbloccare l'account
+    def sblocco_account(self, password):
         try:
-            self.w3.parity.personal.unlockAccount(address, password) #duration = 1200
-            return True
-        except Exception as problema:
-            print(str(problema))
-            return False
+            self.w3.geth.personal.unlock_account(account=self.address, passphrase=password, duration=1200)
+        except:
+            raise Exception("15")
 
-
-    def blocco_account(self, address):
+    # funzione che provvede a bloccare l'account
+    def blocco_account(self):
         try:
-            #self.w3.geth.personal.lock_account(account = address)
-            return True
-        except Exception as problema:
-            print(str(problema))
-            return False
-
-
-    def crea_nft_fornitore(self, address, id_lotto, CO2):
-        try:
-            self.c_instance.functions.nft_fornitore(id_lotto, CO2).transact({'from': address})
+            self.w3.geth.personal.lock_account(account=self.address)
             return True
         except:
             return False
 
+    #funzione che provvede a creare l'nft di proprietà dell'address
+    def crea_nft_fornitore(self, id_lotto, co2):
+        self.c_instance.functions.nft_fornitore(id_lotto, co2).transact({'from': self.address})
 
     # Stampa l'ultimo nft di ogni lotto posseduto, se come parametro si passa mostra_tutti=True, stampa anche i vecchi
-    def lista_nft(self, address, mostra_tutti=False):
+    def lista_nft(self, mostra_tutti=False):
         num_token = self.c_instance.functions.tokenIds().call()
         token_posseduti = []
 
-        for i in range(num_token, 0, -1):       # chiede alla blockchain i token presenti
-            if address == self.c_instance.functions.ownerOf(i).call():  # valuta solo i token posseduti
+        for i in range(num_token, 0, -1):  # chiede alla blockchain i token presenti
+            if self.address == self.c_instance.functions.ownerOf(i).call():  # valuta solo i token posseduti
                 dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(i).call()
                 info_nft = {'id_NFT': i, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
 
                 ultimo_nft_lotto = True
-                if (i != num_token):
-                    for c in range(0, len(token_posseduti)):   # mostra l'nft più recente di ogni lotto
-                        if (dati_nft[0] == token_posseduti[c]['id_lotto']):
-                            ultimo_nft_lotto = False
+                if i != num_token:  # L'ultimo NFT per id è ovviamente l'ultimo relativo a qualunque lotto
+                    for c in range(0, len(token_posseduti)):  # itera sui token salvati in lista
+                        if dati_nft[0] == token_posseduti[c]['id_lotto']:
+                            ultimo_nft_lotto = False  # Se il lotto è già in lista, non è l'ultimo NFT
                             break
-                # Se non richiesto da mostra_tutti, considero solo l'ultimo token di ogni lotto
+
+                # Se non richiesto da mostra_tutti, aggiungo in lista solo l'ultimo NFT di ogni lotto
                 if ultimo_nft_lotto or mostra_tutti:
                     token_posseduti.append(info_nft)
+
+        if not mostra_tutti:  # Se devo trascurare i non utilizzabili,
+            #  rimuovo anche quelli non sono ultimi relativi al lotto ma che ho ceduto ad altri
+            for i in range(num_token, 0, -1):  # Richiede alla blockchain un token alla volta
+                dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(i).call()
+                for c in range(0, len(token_posseduti)):  # mostra l'nft più recente di ogni lotto
+                    # Se trovo un nft con lo stesso lotto di uno in lista
+                    if dati_nft[0] == token_posseduti[c]['id_lotto']:
+                        # Se ha id_NFT maggiore, quello in lista non è utilizzabile
+                        if i > token_posseduti[c]['id_NFT']:
+                            # Lo elimino dalla lista
+                            da_rimuovere = token_posseduti[c]
+                            token_posseduti.remove(da_rimuovere)
+                            break
+
         return token_posseduti
 
+    # funzione che trasferisce la proprietà dell'NFT
+    def trasferisci_nft(self, destinatario, id_lotto):
+        self.c_instance.functions.trasferimento_nft(destinatario, id_lotto).transact({'from': self.address})
 
-    def trasferisci_nft(self, destinatario, id_nft, address):
-        try:
-            self.c_instance.functions.trasferimento_nft(destinatario, id_nft).transact({'from': address})
-            return True
-        except Exception as problema:
-            print(str(problema))
-            return False
+    # funzione che aggiunge le azioni dei trasformatori
+    def aggiungi_azione(self, azione, id_lotto, co2):
+        self.c_instance.functions.aggiungi_azione(azione, id_lotto, co2).transact({'from': self.address})
 
+    # funzione che crea l'nft del trasformatore a partire dalle azioni
+    def crea_nft_trasformatore(self, id_lotto):
+        self.c_instance.functions.nft_trasformatore(id_lotto).transact({'from': self.address})
 
-    def aggiungi_azione(self, address, azione, id_lotto, CO2):
-        try:
-            self.c_instance.functions.aggiungi_azione(azione, id_lotto, CO2).transact({'from': address})
-            return True
-        except Exception as problema:
-            print(str(problema))
-            return False
-
-
-    def crea_nft_trasformatore(self, address, id_vecchio_nft, id_lotto):
-        try:
-            self.c_instance.functions.nft_trasformatore(id_vecchio_nft, id_lotto).transact({'from': address})
-            return True
-        except:
-            return False
-
-
+    # funzione che legge il contenuto dell'NFT a partire dall'ID
     def lettura_impronta_da_nft(self, id_nft):
-        try:
-            dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(id_nft).call()
-            info_nft = {'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}
-            return info_nft
-        except Exception as problema:
-            return problema
+        dati_nft = self.c_instance.functions.lettura_impronta_da_id_nft(id_nft).call()
+        titolo = ['id_NFT', 'id_lotto', 'CO2', 'NFT_precedente']
+        dati = [{'id_NFT': id_nft, 'id_lotto': dati_nft[0], 'CO2': dati_nft[1], 'NFT_precedente': dati_nft[2]}]
+        return titolo, dati
 
-
+    # funzione che legge il contenuto dell'NFT a partire dall'ID
     def lettura_impronta_da_lotto(self, id_lotto):
-        id_nft = self.c_instance.functions.ricerca_lotto(id_lotto).call()
+        id_nft = self.c_instance.functions.controllo_lotto(null_address, id_lotto).call()
         if not id_nft == 0:
             return self.lettura_impronta_da_nft(id_nft)
         else:
-            return "Lotto inesistente"
+            return ["Lotto Inesistente"], []
 
-
-    #TODO vedere se si può usare questa funzione in lista_nft()
-
-    #TODO gestione errori con variabile debug
+    def indirizzo_valido(self, address):
+        if self.w3.isAddress(address) and self.w3.isChecksumAddress(address):
+            return True
+        else:
+            return False

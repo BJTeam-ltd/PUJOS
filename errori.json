@@ -1,0 +1,25 @@
+﻿[{
+    "1": "L'account esiste gia",
+    "2": "Non si puo inserire un account nullo",
+    "3": "Non sei un fornitore, non puoi creare il primo NFT riferito al lotto",
+    "4": "Questo ID lotto e' esistente e gia' associato ad un altro NFT",
+    "5": "Non sei un trasformatore",
+    "6": "Non sei il proprietario dell'ultimo NFT associato al lotto o il lotto e' inesistente",
+    "7": "Questo token non esiste",
+    "8": "Stai trasferendo questo NFT a te stesso",
+    "9": "Il destinatario non è valido, oppure è un fornitore quindi non puo' ricevere NFT",
+    "10": "Sei un cliente, non puoi trasferire NFT",
+    "11": "Non possiedi l'ultimo NFT creato di questo lotto, non puoi fare azioni su di esso",
+    "12": "Puoi creare solamente fornitori (1), trasformatori (2), clienti (3), inserisci un numero valido",
+
+    "13": "Hai inserito troppe volte un input non ammesso",
+    "14": "Account non valido",
+    "15": "Errore nello sblocco dell'account",
+    "16": "Errore nell'inserimento dell'account nel nodo",
+    "99": "Errore grave nel sistema",
+
+
+    "100": "Caratteri non ammessi, riprova:",
+    "101": "Input troppo lungo, riprova:",
+    "102": "Indirizzo non valido, riprova: "
+}]
