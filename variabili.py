@@ -3,7 +3,7 @@
 node_url = 'https://blockchain.g-ws.it'
 
 
-contract_address = "0xBca0fDc68d9b21b5bfB16D784389807017B2bbbc"  # Indirizzo smart contract quando caricato
+contract_address = "0x6468751F5D94540338058254D8F9BD1AcEa498Fe"  # Indirizzo smart contract quando caricato
 
 admin_address = "0xC9C913c8c3C1Cd416d80A0abF475db2062F161f6"  # Indirizzo admin (account che ha eseguito il deploy)
 
